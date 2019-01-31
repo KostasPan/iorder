@@ -1,0 +1,7 @@
+{
+  "name": "iOrder",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
