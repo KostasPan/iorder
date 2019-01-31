@@ -1,0 +1,60 @@
+<ion-content padding>
+
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+        <div text-center>
+          <h4>Login iOrder</h4>
+        </div>
+        <div padding>
+          <form (ngSubmit)="loginUser()" [formGroup]="loginForm" novalidate>
+            <ion-item>
+              <ion-icon name="person"></ion-icon>
+              <ion-input clearInput type='text' formControlName="username"
+                placeholder="Username" name='username'>
+              </ion-input>
+            </ion-item>
+            <div class="alert" *ngIf="(loginForm.controls['username'].invalid || loginForm.controls['username'].pristine) && loginForm.controls['username'].touched">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              Username is required
+            </div>
+            
+            <ion-item>
+              <ion-icon name="key"></ion-icon>
+              <ion-input [type]="passwordType" formControlName="password"
+                placeholder="Password" id="password" name="password">
+              </ion-input>
+              <ion-icon [name]="passwordShownIcon" slot="end" (click)='togglePassword()'></ion-icon>
+              <!--<ion-icon name="eye" *ngIf="passwordShown" item-end (click)='togglePassword()'></ion-icon>
+              <ion-icon name="eye-off" *ngIf="!passwordShown" item-end (click)='togglePassword()'></ion-icon>-->
+            </ion-item>
+            
+            <div class="alert" *ngIf="(loginForm.controls['password'].invalid || loginForm.controls['password'].pristine) && loginForm.controls['password'].touched">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              Password is required
+            </div>
+
+            <ion-row style="height: 5vh;"></ion-row>
+
+            <ion-button [disabled]="loginForm.invalid"
+              type="submit" 
+              shape="round" 
+              expand="block">
+              Login
+            </ion-button>
+          </form>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!--<div>
+    {{diagnostic}}
+  </div>
+  <div>
+    TODO: remove this: {{user.username}}
+  </div>
+  <div>
+    TODO: remove this: {{user.password}}
+  </div>-->
+</ion-content>
