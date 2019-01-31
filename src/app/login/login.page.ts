@@ -13,8 +13,8 @@ export class LoginPage implements OnInit {
   loginForm: FormGroup;
 
   passwordType: String = 'password';
-  passwordShown: boolean;
   passwordShownIcon: String = 'eye-off';
+  passwordShown = false;
 
   constructor(
     private toastController: ToastController,

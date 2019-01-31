@@ -1,41 +1,41 @@
-// $white-color: #fff;
-// $height100: 100%;
+$white-color: #fff;
+$height100: 100%;
 
-// ion-grid {
-//     width:100%;
-//     height: $height100;
-//     background: #dfdfdf;
-// }
+ion-grid {
+    width:100%;
+    height: $height100;
+    background: #dfdfdf;
+}
 
-// ion-row {
-//     height: $height100;
-// }
+ion-row {
+    height: $height100;
+}
 
-// ion-col {
-//     border: 1px solid #488aff;
-//     background: $white-color;
-// }
+ion-col {
+    border: 1px solid #488aff;
+    background: $white-color;
+}
 
-// ion-button {
-//     font-weight: 300;
-// }
+ion-button {
+    font-weight: 300;
+}
 
-// ion-icon {
-//     margin-right: 2vh;
-// }
+ion-icon {
+    margin-right: 2vh;
+}
 
-// @media (min-width: 240px) and (max-width: 768px) {
-//     ion-grid {
-//         background: $white-color;
-//     }
-//     ion-col {
-//         border: none;
-//     }
-// }
+@media (min-width: 240px) and (max-width: 768px) {
+    ion-grid {
+        background: $white-color;
+    }
+    ion-col {
+        border: none;
+    }
+}
 
-// /* The alert message box */
-// .alert {
-//     padding: 5px;
-//     color: #f44336; /* red */
-//     margin-left: 16px;
-//   }
+/* The alert message box */
+.alert {
+    padding: 5px;
+    color: #f44336; /* red */
+    margin-left: 16px;
+  }
