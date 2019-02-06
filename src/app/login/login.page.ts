@@ -2,7 +2,7 @@ import { AuthService } from './../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
-// import { Toast } from '@ionic-native/toast';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +16,13 @@ export class LoginPage implements OnInit {
   passwordShownIcon: String = 'eye-off';
   passwordShown = false;
 
+  loading: any;
+
   constructor(
     private toastController: ToastController,
-    // public toast: Toast,
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private loadingController: LoadingController
   ) {}
 
   ngOnInit() {
@@ -36,9 +38,13 @@ export class LoginPage implements OnInit {
 
   loginUser() {
     console.log(this.loginForm.value);
+    this.presentLoading();
+    console.log('Start LOADING');
     this.authService.loginUser(this.loginForm.value).subscribe(
       data => {
         console.log(data);
+        this.presentToast(JSON.stringify(data));
+        this.dismissLoading(); //ERROR!!!!
       },
       err => {
         console.log(err);
@@ -46,19 +52,16 @@ export class LoginPage implements OnInit {
         if (err.error.msg) {
           // unexpected error from server
           errorMessage = err.error.msg[0].message;
-          this.presentToast(errorMessage);
-          // this.presentToastNative(errorMessage);
         } else if (err.error.message) {
           // controled error from server
           errorMessage = err.error.message;
-          this.presentToast(errorMessage);
-          // this.presentToastNative(errorMessage);
         } else {
           // machine cannot reach server
           errorMessage = 'Cannot reach server, check interconnection';
-          this.presentToast(errorMessage);
-          // this.presentToastNative(errorMessage);
         }
+        console.log('End LOADING');
+        this.presentToast(errorMessage);
+        this.dismissLoading(); //ERROR!!!!
       }
     );
   }
@@ -70,16 +73,21 @@ export class LoginPage implements OnInit {
       position: 'top',
       closeButtonText: 'Close',
       mode: 'ios',
-      duration: 3000
+      duration: 4000
     });
     toast.present();
   }
 
-  // presentToastNative(errorMessage: string) {
-  //   this.toast.show(errorMessage, '3000', 'center').subscribe(toast => {
-  //     console.log(toast);
-  //   });
-  // }
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      message: 'Please wait...',
+      keyboardClose: true
+    });
+    return await this.loading.present();
+  }
+  async dismissLoading() {
+    return await this.loading.dismiss();
+  }
 
   togglePassword() {
     if (this.passwordShown) {
