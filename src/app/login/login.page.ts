@@ -1,8 +1,9 @@
+import { LoadingService } from './../services/loading.service';
+import { ToastService } from './../services/toast.service';
 import { AuthService } from './../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
-import { LoadingController } from '@ionic/angular';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -16,13 +17,13 @@ export class LoginPage implements OnInit {
   passwordShownIcon: String = 'eye-off';
   passwordShown = false;
 
-  loading: any;
+  isloading: false;
 
   constructor(
-    private toastController: ToastController,
+    private toastService: ToastService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private loadingController: LoadingController
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit() {
@@ -38,55 +39,38 @@ export class LoginPage implements OnInit {
 
   loginUser() {
     console.log(this.loginForm.value);
-    this.presentLoading();
-    console.log('Start LOADING');
-    this.authService.loginUser(this.loginForm.value).subscribe(
-      data => {
-        console.log(data);
-        this.presentToast(JSON.stringify(data));
-        this.dismissLoading(); //ERROR!!!!
-      },
-      err => {
-        console.log(err);
-        let errorMessage: string;
-        if (err.error.msg) {
-          // unexpected error from server
-          errorMessage = err.error.msg[0].message;
-        } else if (err.error.message) {
-          // controled error from server
-          errorMessage = err.error.message;
-        } else {
-          // machine cannot reach server
-          errorMessage = 'Cannot reach server, check interconnection';
-        }
-        console.log('End LOADING');
-        this.presentToast(errorMessage);
-        this.dismissLoading(); //ERROR!!!!
-      }
-    );
-  }
 
-  async presentToast(errorMessage: string) {
-    const toast = await this.toastController.create({
-      message: errorMessage,
-      showCloseButton: true,
-      position: 'top',
-      closeButtonText: 'Close',
-      mode: 'ios',
-      duration: 4000
-    });
-    toast.present();
-  }
-
-  async presentLoading() {
-    this.loading = await this.loadingController.create({
-      message: 'Please wait...',
-      keyboardClose: true
-    });
-    return await this.loading.present();
-  }
-  async dismissLoading() {
-    return await this.loading.dismiss();
+    this.loadingService
+      .presentLoading()
+      .then(() =>
+        // console.log('Start LOADING');
+        this.authService.loginUser(this.loginForm.value).subscribe(
+          data => {
+            console.log(data);
+            // this.toastService.presentToast(JSON.stringify(data));
+            this.toastService.presentToast(data.message);
+            // this.loadingService.dismissLoading(); // ERROR!!!!
+          },
+          err => {
+            console.log(err);
+            let errorMessage: string;
+            if (err.error.msg) {
+              // unexpected error from server
+              errorMessage = err.error.msg[0].message;
+            } else if (err.error.message) {
+              // controlled error from server
+              errorMessage = err.error.message;
+            } else {
+              // machine cannot reach server
+              errorMessage = 'Cannot reach server, check interconnection';
+            }
+            console.log('End LOADING');
+            this.toastService.presentToast(errorMessage);
+            // this.loadingService.dismissLoading(); // ERROR!!!!
+          }
+        )
+      )
+      .then(() => this.loadingService.dismissLoading());
   }
 
   togglePassword() {
