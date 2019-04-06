@@ -5,8 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ToastService {
-
-  constructor(private toastController: ToastController) { }
+  constructor(private toastController: ToastController) {}
 
   async presentToast(errorMessage: string) {
     const toast = await this.toastController.create({
@@ -19,5 +18,15 @@ export class ToastService {
     });
     toast.present();
   }
-
+  async presentToastError(errorMessage: string) {
+    const toast = await this.toastController.create({
+      message: errorMessage,
+      showCloseButton: true,
+      position: 'top',
+      closeButtonText: 'OK',
+      mode: 'ios',
+      duration: 6000
+    });
+    toast.present();
+  }
 }

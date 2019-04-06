@@ -8,9 +8,9 @@ import { IonicModule } from '@ionic/angular';
 import { LoginPage } from './login.page';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ToastService } from '../services/toast.service';
-import { AuthService } from './../services/auth.service';
-import { LoadingService } from '../services/loading.service';
+import { LoadingService } from './../../services/loading.service';
+import { AuthService } from '../auth.service';
+import { ToastService } from './../../services/toast.service';
 
 const routes: Routes = [
   {
