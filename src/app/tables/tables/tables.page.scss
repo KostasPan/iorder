@@ -1,13 +1,12 @@
 ion-item-divider {
   --background: transparent;
 }
-ion-col {
-  --ion-grid-column-padding: -15%;
+ion-card {
+  margin: 5%;
 }
 
 .container {
     // width: 100px;
-    // background-color: green;
     overflow: hidden; 
     white-space: nowrap;
     ::-webkit-scrollbar {

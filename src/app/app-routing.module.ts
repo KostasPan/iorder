@@ -1,6 +1,7 @@
 import { AuthGuard } from './services/auth.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { OrderPageModule } from './order/order/order.module';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,8 +17,19 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'table/:id',
+    path: 'order/:id',
     loadChildren: './order/order/order.module#OrderPageModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'categories',
+    loadChildren:
+      './products/categories/categories.module#CategoriesPageModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'categories/:category',
+    loadChildren: './products/products/products.module#ProductsPageModule',
     canActivate: [AuthGuard]
   }
 

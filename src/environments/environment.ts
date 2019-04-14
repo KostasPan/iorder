@@ -3,8 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  BASEURL: 'http://192.168.10.5:3000/api/iOrder',
-  // BASEURL: 'http://localhost:3000/api/iOrder',
+  // BASEURL: 'http://192.168.10.5:3000/api/iOrder',
+  BASEURL: 'http://localhost:3000/api/iOrder',
   production: false
 };
 

@@ -97,7 +97,7 @@ export class TablesPage implements OnInit {
   }
 
   order(table) {
-    this.router.navigate(['table', table._id]);
+    this.router.navigate(['/order', table._id]);
   }
 
   scrollTo(id) {

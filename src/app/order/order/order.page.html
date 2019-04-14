@@ -1,9 +1,58 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>order</ion-title>
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title slot="start"><ion-text>Order Paper</ion-text></ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<div *ngIf="!hasProducts;then tapForProducts else showProducts"></div>
 
-</ion-content>
+<ng-template #tapForProducts>
+  <ion-content padding (click)='categories()'>
+    <ion-text class="noOrderText">
+      <h1>No products yet</h1>
+    </ion-text>
+    <img id="addImage" src="assets/images/plus.png" alt="add-products">
+    <ion-text class="noOrderText">
+      <h1>Tap here to add products</h1>
+    </ion-text>
+  </ion-content>
+</ng-template>
+
+<ng-template #showProducts>
+  <ion-content padding >
+    <h1>lista proiontwn pou exei paragilei to trapezi</h1>
+  </ion-content>
+</ng-template>
+
+
+
+
+
+<!-- <ion-content padding>
+  <div id="main">WORKING</div>
+  
+  <ion-list id="mySidenav" class="sidenav">
+      <ion-button expand="block" (click)="klik()">
+        <ion-label *ngIf="show">Send</ion-label>
+        <ion-icon slot="{{show?'start':'icon-only'}}" name="send"></ion-icon>
+      </ion-button>
+      <ion-button expand="block">
+        <ion-label *ngIf="show">Add</ion-label>
+        <ion-icon slot="{{show?'start':'icon-only'}}" name="add"></ion-icon>
+      </ion-button>
+      <ion-button expand="block">
+        <ion-label *ngIf="show">Remove</ion-label>
+        <ion-icon slot="{{show?'start':'icon-only'}}" name="remove"></ion-icon>
+      </ion-button>
+      <ion-button expand="block">
+        <ion-label *ngIf="show">Swap</ion-label>
+        <ion-icon slot="{{show?'start':'icon-only'}}" name="swap"></ion-icon>
+      </ion-button>
+      <ion-button expand="block">
+        <ion-label *ngIf="show">Document</ion-label>
+        <ion-icon slot="{{show?'start':'icon-only'}}" name="document"></ion-icon>
+      </ion-button>
+  </ion-list>
+
+</ion-content> -->
