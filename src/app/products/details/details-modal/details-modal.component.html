@@ -1,0 +1,10 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-icon style="padding-left: 1em;" slot="start" name="close" (click)="myDismiss()"></ion-icon>      
+      <ion-title slot="start">{{productName}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-details-component (dismissModalEvent)="myDismiss()" [productName]='productName'></app-details-component>
+</ion-content>

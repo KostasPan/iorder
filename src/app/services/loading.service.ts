@@ -15,10 +15,10 @@ export class LoadingService {
       keyboardClose: true,
       duration: 6000
     });
-    return await this.loading.present().then(() => console.log('presented'));
+    return await this.loading.present();
   }
 
   async dismissLoading() {
-    return await this.loading.dismiss().then(() => console.log('dismissed'));
+    return await this.loading.dismiss();
   }
 }

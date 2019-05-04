@@ -1,7 +1,16 @@
 <ion-header>
   <ion-toolbar>
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title slot="start"><ion-text>Order Paper</ion-text></ion-title>
+    <ion-title slot="start"><ion-text>{{tableName}}</ion-text></ion-title>
+
+    <ion-buttons slot="end">
+      <ion-chip *ngIf="total && !unsentProducts.length" (click)="payoffProducts()">
+        € {{total}}
+      </ion-chip>
+      <ion-button (click)='categories()'>
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -9,50 +18,63 @@
 
 <ng-template #tapForProducts>
   <ion-content padding (click)='categories()'>
-    <ion-text class="noOrderText">
+    <ion-text color="medium" class="noOrderText">
       <h1>No products yet</h1>
     </ion-text>
     <img id="addImage" src="assets/images/plus.png" alt="add-products">
-    <ion-text class="noOrderText">
+    <ion-text color="medium" class="noOrderText">
       <h1>Tap here to add products</h1>
     </ion-text>
   </ion-content>
 </ng-template>
 
 <ng-template #showProducts>
-  <ion-content padding >
-    <h1>lista proiontwn pou exei paragilei to trapezi</h1>
-  </ion-content>
-</ng-template>
+  <ion-content no-padding >
+    <ion-list>
+      <ion-item *ngFor="let p of unsentProducts; let i = index">
+        <ion-label>
+          <ion-text color='danger'>{{p.quantity}}</ion-text>
+          {{p.name}}
+        <ion-label text-wrap>
+          <ion-note *ngFor="let c of p.choices">
+            {{c.selected}}|
+          </ion-note>
+        </ion-label>
+        </ion-label>
+        <ion-chip slot="end" outline='true'>€ {{p.price}}</ion-chip>
+        <ion-icon no-padding name='trash' slot="end" (click)='removeProduct(i)'></ion-icon>
+      </ion-item>
+    
+      <ion-item *ngFor="let p of products">
+        <ion-label>
+          <ion-text color='danger'>{{p.quantity}}</ion-text>
+          {{p.name}}
+        <ion-label text-wrap>
+          <ion-note *ngFor="let c of p.choices">
+            {{c.selected}}|
+          </ion-note>
+        </ion-label>
+        </ion-label>
+        <ion-chip slot="end" outline='true'>€ {{p.price}}</ion-chip>
+      </ion-item>
+    </ion-list>
 
-
-
-
-
-<!-- <ion-content padding>
-  <div id="main">WORKING</div>
+    <!-- <ion-list>
+      <ion-item *ngFor="let p of products">
+        <ion-label>{{p.name}}</ion-label>
+        <ion-label slot="end">{{p.price}}</ion-label>
+      </ion-item>
+    </ion-list> -->
   
-  <ion-list id="mySidenav" class="sidenav">
-      <ion-button expand="block" (click)="klik()">
-        <ion-label *ngIf="show">Send</ion-label>
-        <ion-icon slot="{{show?'start':'icon-only'}}" name="send"></ion-icon>
-      </ion-button>
-      <ion-button expand="block">
-        <ion-label *ngIf="show">Add</ion-label>
-        <ion-icon slot="{{show?'start':'icon-only'}}" name="add"></ion-icon>
-      </ion-button>
-      <ion-button expand="block">
-        <ion-label *ngIf="show">Remove</ion-label>
-        <ion-icon slot="{{show?'start':'icon-only'}}" name="remove"></ion-icon>
-      </ion-button>
-      <ion-button expand="block">
-        <ion-label *ngIf="show">Swap</ion-label>
-        <ion-icon slot="{{show?'start':'icon-only'}}" name="swap"></ion-icon>
-      </ion-button>
-      <ion-button expand="block">
-        <ion-label *ngIf="show">Document</ion-label>
-        <ion-icon slot="{{show?'start':'icon-only'}}" name="document"></ion-icon>
-      </ion-button>
-  </ion-list>
-
-</ion-content> -->
+  </ion-content>
+  <ion-button *ngIf="unsentProducts.length && unsentProducts" class="send-btn" (click)="sendProducts()">
+    <ion-icon slot="start" name="send"></ion-icon>
+    Send Products
+  </ion-button>
+  <div *ngIf="!(unsentProducts.length && unsentProducts)">
+    <ion-button class="payoff-btn" (click)="payoffProducts()">
+      <ion-icon slot="start" name="cash"></ion-icon>
+      Payoff € {{total}}
+    </ion-button>
+  </div>
+</ng-template>

@@ -1,3 +1,4 @@
+import { DetailsShareModule } from './products/details/details-share/details-share.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -14,13 +15,15 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { TokenInterceptor } from './services/token-interceptor';
 
 import { IonicStorageModule } from '@ionic/storage';
+import { DetailsModalComponent } from './products/details/details-modal/details-modal.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, DetailsModalComponent],
+  entryComponents: [DetailsModalComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
+    DetailsShareModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     AppRoutingModule

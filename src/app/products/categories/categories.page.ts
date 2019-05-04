@@ -2,7 +2,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { LoadingService } from './../../services/loading.service';
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../products.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-categories',
@@ -14,7 +14,8 @@ export class CategoriesPage implements OnInit {
     private productsService: ProductsService,
     private loadingService: LoadingService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   categories = [];
@@ -53,6 +54,13 @@ export class CategoriesPage implements OnInit {
   }
 
   products(category) {
-    this.router.navigate(['/categories', category]);
+    // this.router.navigate(['/categories', category]);
+    this.router.navigate([
+      '/order',
+      this.activatedRoute.snapshot.params['tname'],
+      this.activatedRoute.snapshot.params['id'],
+      'categories',
+      category
+    ]);
   }
 }

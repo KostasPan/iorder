@@ -1,0 +1,33 @@
+
+
+.quantity {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    ion-grid {
+        //--ion-grid-padding: 0;
+        --ion-grid-column-padding: 0;
+        ion-row {
+            .price {
+                font-size: 1.1em;
+                text-align: center;
+            }
+            .total-price {
+                font-size: 0.8em;
+                text-align: center;
+            }
+        }
+    }
+}
+
+// ion-item {
+//     margin-top: 0.5em;
+//     margin-bottom: 0.5em;
+// }
+
+.add-btn {
+    --border-radius: 0;
+    margin: 0;
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+}

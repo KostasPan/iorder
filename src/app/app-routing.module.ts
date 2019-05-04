@@ -17,19 +17,25 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'order/:id',
+    path: 'order/:tname/:id',
     loadChildren: './order/order/order.module#OrderPageModule',
     canActivate: [AuthGuard]
   },
   {
-    path: 'categories',
+    path: 'order/:tname/:id/:cat',
     loadChildren:
       './products/categories/categories.module#CategoriesPageModule',
     canActivate: [AuthGuard]
   },
   {
-    path: 'categories/:category',
+    path: 'order/:tname/:id/:cat/:category',
     loadChildren: './products/products/products.module#ProductsPageModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'details',
+    loadChildren:
+      './products/details/details-page/details.module#DetailsPageModule',
     canActivate: [AuthGuard]
   }
 

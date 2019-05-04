@@ -53,7 +53,6 @@ export class LoginPage implements OnInit {
             this.loginForm.reset();
             this.tokenService.setAuthToken(data.token);
             // this.toastService.presentToast(JSON.stringify(data));
-            this.toastService.presentToast(data.message);
             this.router.navigate(['tables']);
             // this.loadingService.dismissLoading(); // ERROR!!!!
           },

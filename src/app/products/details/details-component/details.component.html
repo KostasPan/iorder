@@ -1,0 +1,68 @@
+<ion-list>
+  <ion-item class="quantity">
+    <ion-button shape="round" size="small" fill="clear" (click)="remove()">
+      <ion-icon slot='icon-only' name="remove-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-grid>
+      <ion-row>
+        <ion-col class="price">
+          <ion-text color="danger">{{quantity}}</ion-text> x {{productPrice}} €
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="total-price">
+          <ion-text color="medium">Total: {{totalPrice}} €</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button shape="round" size="small" fill="clear" (click)="add()">
+      <ion-icon slot='icon-only' name="add-circle-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-list *ngIf="details.length">
+    <ion-list-header>
+        <ion-text color="medium">Obligatory selection</ion-text>
+    </ion-list-header>
+    <ion-item *ngFor="let d of details; let i = index">
+      <ion-label>{{d.type}}</ion-label>
+      <ion-select multiple={{d.multiple}} [(ngModel)]="d.selected">
+        <ion-select-option *ngFor="let choice of d.choices">{{choice}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="detailsOpt.length">
+    <ion-list-header>
+      <ion-text color="medium">Optional selection</ion-text>
+    </ion-list-header>
+
+    <ion-grid no-padding>
+      <ion-row no-padding *ngFor="let d of detailsOpt; let i = index">
+        <ion-col no-padding>
+          <ion-item>
+            <ion-label>{{d.type}}</ion-label>
+            <ion-select multiple={{d.multiple}} [(ngModel)]="d.selected">
+              <ion-select-option *ngFor="let choice of d.choices">{{choice}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col no-padding size="2" align-self-center *ngIf="d.selected">
+          <ion-button (click)="clearSelected(d)" shape="round" size="small" fill="clear">
+            <ion-icon size="small" slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+
+  <ion-item style="margin-bottom: 3em;">
+    <ion-label color="medium" position="stacked">Comment</ion-label>
+    <ion-input clear-input placeholder="Enter more info here" [(ngModel)]='comment'></ion-input>
+  </ion-item>
+</ion-list>
+
+<ion-button class="add-btn" (click)="makeOrder()">
+  <ion-icon slot="start" name="add"></ion-icon>
+  Add product
+</ion-button>
