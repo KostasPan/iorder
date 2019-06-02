@@ -16,9 +16,10 @@ import { TokenInterceptor } from './services/token-interceptor';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { DetailsModalComponent } from './products/details/details-modal/details-modal.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
 @NgModule({
-  declarations: [AppComponent, DetailsModalComponent],
+  declarations: [AppComponent, DetailsModalComponent, ProgressBarComponent],
   entryComponents: [DetailsModalComponent],
   imports: [
     BrowserModule,

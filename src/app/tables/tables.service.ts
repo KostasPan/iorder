@@ -28,7 +28,7 @@ export class TablesService {
     // TODO:
   }
 
-  deleteTable() {
-    // TODO:
+  deleteTable(body) {
+    return this.http.post(`${ENV.BASEURL}/table/delete-table`, body);
   }
 }

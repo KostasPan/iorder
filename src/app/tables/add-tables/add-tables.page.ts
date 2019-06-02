@@ -38,33 +38,11 @@ export class AddTablesPage implements OnInit {
   }
 
   addTables() {
-    this.loadingService
-      .presentLoading()
-      .then(() => {
-        this.tablesService.addTable(this.addTablesForm.value).subscribe(
-          data => {
-            console.log(data);
-            this.addTablesForm.reset();
-            this.toastService.presentToast(data.message);
-          },
-          err => {
-            console.log(err);
-            let errorMessage: string;
-            if (err.error.msg) {
-              // unexpected joi error from server
-              errorMessage = err.error.msg[0].message;
-            } else if (err.error.message) {
-              // controlled error from server
-              errorMessage = err.error.message;
-            } else {
-              // machine cannot reach server
-              errorMessage = 'Cannot reach server, check interconnection';
-            }
-            this.toastService.presentToastError(errorMessage);
-          }
-        );
-      })
-      .then(() => this.loadingService.dismissLoading());
+    this.tablesService.addTable(this.addTablesForm.value).subscribe(data => {
+      // console.log(data);
+      this.addTablesForm.reset();
+      this.toastService.presentToast(data.message);
+    });
   }
 
   closeAddTablesPage() {

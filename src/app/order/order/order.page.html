@@ -2,9 +2,9 @@
   <ion-toolbar>
     <ion-back-button slot="start"></ion-back-button>
     <ion-title slot="start"><ion-text>{{tableName}}</ion-text></ion-title>
-
+    <!-- <ion-title *ngIf="adminViewMode" slot="end" color="medium"><ion-text>admin</ion-text></ion-title> -->
     <ion-buttons slot="end">
-      <ion-chip *ngIf="total && !unsentProducts.length" (click)="payoffProducts()">
+      <ion-chip *ngIf="total && !(unsentProducts.length && unsentProducts)" (click)="payoffProducts()">
         € {{total}}
       </ion-chip>
       <ion-button (click)='categories()'>
@@ -14,7 +14,8 @@
   </ion-toolbar>
 </ion-header>
 
-<div *ngIf="!hasProducts;then tapForProducts else showProducts"></div>
+<!-- <div *ngIf="!hasProducts;then tapForProducts else showProducts"></div> -->
+<div *ngIf="!(unsentProducts.length || products.length);then tapForProducts else showProducts"></div>
 
 <ng-template #tapForProducts>
   <ion-content padding (click)='categories()'>
@@ -23,7 +24,7 @@
     </ion-text>
     <img id="addImage" src="assets/images/plus.png" alt="add-products">
     <ion-text color="medium" class="noOrderText">
-      <h1>Tap here to add products</h1>
+      <h1>Tap here or <ion-icon slot="icon-only" name="add"></ion-icon> to add products</h1>
     </ion-text>
   </ion-content>
 </ng-template>
@@ -67,14 +68,14 @@
     </ion-list> -->
   
   </ion-content>
-  <ion-button *ngIf="unsentProducts.length && unsentProducts" class="send-btn" (click)="sendProducts()">
-    <ion-icon slot="start" name="send"></ion-icon>
-    Send Products
-  </ion-button>
-  <div *ngIf="!(unsentProducts.length && unsentProducts)">
-    <ion-button class="payoff-btn" (click)="payoffProducts()">
+  <!-- <div *ngIf="!adminViewMode"> -->
+    <ion-button *ngIf="unsentProducts.length && unsentProducts" class="send-btn" (click)="sendProducts()">
+      <ion-icon slot="start" name="send"></ion-icon>
+      Send Products
+    </ion-button>
+    <ion-button *ngIf="!(unsentProducts.length && unsentProducts)" class="payoff-btn" (click)="payoffProducts()">
       <ion-icon slot="start" name="cash"></ion-icon>
       Payoff € {{total}}
     </ion-button>
-  </div>
+  <!-- </div> -->
 </ng-template>

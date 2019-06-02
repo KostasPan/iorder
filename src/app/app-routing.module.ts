@@ -1,3 +1,4 @@
+import { AdminGuard } from './services/admin.guard';
 import { AuthGuard } from './services/auth.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -7,14 +8,14 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: './auth/login/login.module#LoginPageModule' },
   {
-    path: 'add-tables',
-    loadChildren: './tables/add-tables/add-tables.module#AddTablesPageModule',
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'tables',
     loadChildren: './tables/tables/tables.module#TablesPageModule',
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'add-tables',
+    loadChildren: './tables/add-tables/add-tables.module#AddTablesPageModule',
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: 'order/:tname/:id',
@@ -37,10 +38,15 @@ const routes: Routes = [
     loadChildren:
       './products/details/details-page/details.module#DetailsPageModule',
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    path: 'users',
+    loadChildren: './users/users/users.module#UsersPageModule',
+    canActivate: [AuthGuard, AdminGuard]
+  },
 
   // redirect to home
-  // { path: '**', redirectTo: 'tables' }
+  { path: '**', redirectTo: 'tables' }
 ];
 
 @NgModule({

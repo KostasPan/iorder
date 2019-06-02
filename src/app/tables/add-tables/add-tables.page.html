@@ -3,13 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>New Tables</ion-title>
+    <ion-title>Add Tables</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-button (click)='closeAddTablesPage()'>close page</ion-button>
-
   <ion-grid>
     <form (ngSubmit)="addTables()" [formGroup]="addTablesForm" novalidate>
       <ion-row justify-content-center>

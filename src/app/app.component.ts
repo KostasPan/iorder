@@ -32,11 +32,12 @@ export class AppComponent {
   // TODO: allagi! kathe fora pou epilegw url apo tin bara
   //       epistrefw ksana sto ../tables
   automaticLogin() {
-    const authToken = this.tokenService.getAuthToken();
-    if (authToken) {
-      this.router.navigate(['/tables']);
-    } else {
-      this.router.navigate(['/']);
-    }
+    this.tokenService.getAuthTokenStorage().then(authToken => {
+      if (authToken) {
+        this.router.navigate(['/tables']);
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

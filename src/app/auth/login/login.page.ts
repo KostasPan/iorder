@@ -1,5 +1,5 @@
 import { TokenService } from './../../services/token.service';
-import { RouterModule, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from './../auth.service';
 import { ToastService } from './../../services/toast.service';
 import { LoadingService } from './../../services/loading.service';
@@ -18,8 +18,6 @@ export class LoginPage implements OnInit {
   passwordType: String = 'password';
   passwordShownIcon: String = 'eye-off';
   passwordShown = false;
-
-  isloading: false;
 
   constructor(
     private toastService: ToastService,
@@ -52,9 +50,12 @@ export class LoginPage implements OnInit {
             console.log(data);
             this.loginForm.reset();
             this.tokenService.setAuthToken(data.token);
-            // this.toastService.presentToast(JSON.stringify(data));
-            this.router.navigate(['tables']);
-            // this.loadingService.dismissLoading(); // ERROR!!!!
+            // this.router
+            //   .navigate(['tables'])
+            //   .then(() =>
+            //     this.loginForm['controls']['password'].setValue('00000000')
+            //   );
+            this.router.navigate(['/tables']);
           },
           err => {
             console.log(err);
@@ -70,7 +71,6 @@ export class LoginPage implements OnInit {
               errorMessage = 'Cannot reach server, check interconnection';
             }
             this.toastService.presentToastError(errorMessage);
-            // this.loadingService.dismissLoading(); // ERROR!!!!
           }
         );
       })

@@ -25,36 +25,12 @@ export class CategoriesPage implements OnInit {
   }
 
   initCategories() {
-    this.loadingService
-      .presentLoading()
-      .then(() => {
-        this.productsService.getCategories().subscribe(
-          data => {
-            console.log(data);
-            this.categories = data.categories;
-          },
-          err => {
-            console.log(err);
-            let errorMessage: string;
-            if (err.error.msg) {
-              // unexpected joi error from server
-              errorMessage = err.error.msg[0].message;
-            } else if (err.error.message) {
-              // controlled error from server
-              errorMessage = err.error.message;
-            } else {
-              // machine cannot reach server
-              errorMessage = 'Cannot reach server, check interconnection';
-            }
-            this.toastService.presentToastError(errorMessage);
-          }
-        );
-      })
-      .then(() => this.loadingService.dismissLoading());
+    this.productsService.getCategories().subscribe(data => {
+      this.categories = data.categories;
+    });
   }
 
   products(category) {
-    // this.router.navigate(['/categories', category]);
     this.router.navigate([
       '/order',
       this.activatedRoute.snapshot.params['tname'],

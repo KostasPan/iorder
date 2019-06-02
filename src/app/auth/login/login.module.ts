@@ -29,6 +29,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [LoginPage],
-  providers: [AuthService, ToastService, LoadingService]
+  // providers: [AuthService, ToastService, LoadingService]
+  providers: [AuthService]
 })
 export class LoginPageModule {}

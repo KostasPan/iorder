@@ -1,4 +1,6 @@
-import { LoadingService } from './../../services/loading.service';
+import { TablesShareService } from './../../tables/tables-share.service';
+import { TokenService } from './../../services/token.service';
+import { AlertService } from './../../services/alert.service';
 import { OrderService } from './../order.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -15,18 +17,22 @@ export class OrderPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private orderShareService: OrderShareService,
     private orderService: OrderService,
-    private loadingService: LoadingService
+    private tablesShareService: TablesShareService,
+    private tokenService: TokenService,
+    private alertService: AlertService
   ) {}
 
   // show = false;
   products = [];
   unsentProducts = [];
-  hasProducts = false;
+  hasProducts = true;
   tableName;
   total = 0;
+  // adminViewMode = false;
   private tableId;
 
   ngOnInit() {
+    // this.checkAdminViewMode().then(isAdmin => (this.adminViewMode = isAdmin));
     this.total = 0;
     this.tableName = this.activatedRoute.snapshot.params['tname'];
     this.tableId = this.activatedRoute.snapshot.params['id'];
@@ -39,7 +45,6 @@ export class OrderPage implements OnInit {
   ionViewWillEnter() {
     // get all unsent from service
     this.unsentProducts = this.orderShareService.getOrder();
-    this.hasProd();
   }
 
   sendProducts() {
@@ -49,45 +54,18 @@ export class OrderPage implements OnInit {
       tableId: this.tableId
     };
 
-    this.loadingService
-      .presentLoading()
-      .then(() => {
-        this.orderService.setOrder(body).subscribe(
-          data => {
-            console.log(data);
-          },
-          err => {
-            console.log(err);
-            let errorMessage: string;
-            if (err.error.msg) {
-              // unexpected joi error from server
-              errorMessage = err.error.msg[0].message;
-            } else if (err.error.message) {
-              // controlled error from server
-              errorMessage = err.error.message;
-            } else {
-              // machine cannot reach server
-              errorMessage = 'Cannot reach server, check interconnection';
-            }
-          }
-        );
-      })
-      .then(() => this.loadingService.dismissLoading())
-      .then(() => {
-        // reset unsentProducts
-        this.unsentProducts = this.orderShareService.emptyOrder();
-        // get products from api server
-        this.getProducts();
-      });
+    this.orderService.setOrder(body).subscribe(() => {
+      // reset unsentProducts
+      this.unsentProducts = this.orderShareService.emptyOrder();
+      // get products from api server
+      this.getProducts();
+    });
   }
 
   payoffProducts() {
-    // todo: payoff
     this.orderService
       .payoffOrder({ tableId: this.tableId, total: this.total })
-      .subscribe(data => {
-        console.log(data);
-      });
+      .subscribe();
     this.products = [];
     this.hasProducts = false;
     this.total = 0;
@@ -96,32 +74,35 @@ export class OrderPage implements OnInit {
   getProducts() {
     // get products from api server
     // products = server products
-    this.orderService.getOrder({ tableId: this.tableId }).subscribe(data => {
-      this.products = data.order;
-      this.hasProd();
-      this.calculateTotal();
-      console.log(data.order);
-    });
+
+    this.orderService.getOrder({ tableId: this.tableId }).subscribe(
+      data => {
+        this.products = data.order;
+        this.calculateTotal();
+        console.log(data.order);
+      },
+      error => {
+        if (error.error.auth === null) {
+          this.alertService.presentAlert(
+            'Table Access',
+            'Warning',
+            'Another user has already placed an order for table: ' +
+              this.tableName +
+              '.'
+          );
+          this.router.navigate(['/tables']);
+        }
+      }
+    );
   }
 
   removeProduct(productIndex) {
     this.orderShareService.removeProduct(productIndex);
     this.unsentProducts = this.orderShareService.getOrder();
-    this.hasProd();
-  }
-
-  hasProd() {
-    if (
-      (this.products && this.products.length) ||
-      (this.unsentProducts && this.unsentProducts.length)
-    ) {
-      this.hasProducts = true;
-    } else {
-      this.hasProducts = false;
-    }
   }
 
   calculateTotal() {
+    this.total = 0;
     this.products.forEach(el => (this.total += el.price));
   }
 
@@ -132,5 +113,28 @@ export class OrderPage implements OnInit {
       this.tableId,
       'categories'
     ]);
+  }
+
+  async checkAdminViewMode() {
+    const tokenData = await this.tokenService
+      .getAuthStoragePayload()
+      .then(payload => {
+        return { username: payload.data.username, admin: payload.data.admin };
+      });
+    const tableData = await this.tablesShareService.getTable().then(table => {
+      return { busy: table.busy, user: table.user };
+    });
+
+    // TODO: compare user._id, not user.username
+    if (
+      tokenData.admin &&
+      tokenData.username !== tableData.user &&
+      tableData.busy
+    ) {
+      console.log('isAdminViewMode---->>', true);
+      return true;
+    }
+    console.log('isAdminViewMode---->>', false);
+    return false;
   }
 }
