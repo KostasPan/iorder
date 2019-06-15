@@ -86,9 +86,9 @@ export class OrderPage implements OnInit {
           this.alertService.presentAlert(
             'Table Access',
             'Warning',
-            'Another user has already placed an order for table: ' +
+            'Another user has already placed an order for table: `' +
               this.tableName +
-              '.'
+              '`.'
           );
           this.router.navigate(['/tables']);
         }

@@ -3,14 +3,14 @@
     <ion-buttons slot="start">
       <!-- <ion-button (click)="presentPopover($event)"> -->
       <ion-button (click)="confirmLogout()">
-          <ion-text color="dark">{{username}}</ion-text>
-          <ion-icon slot="icon-only" name="contact"></ion-icon>
+          <ion-label color="dark">{{username}}</ion-label>
+          <ion-icon slot="start" name="contact"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title *ngIf=isAdmin slot="end" color="medium"><ion-text>Admin mode</ion-text></ion-title>
     <ion-buttons slot="end">
       <ion-button>
-          <ion-icon slot="end" name="search"></ion-icon>
+          <ion-icon slot="icon-only" name="paper-plane"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -37,11 +37,16 @@
       <ion-fab-button (click)='removeTables = !removeTables'>
         <ion-icon [attr.color]="removeTables? 'danger' : 'success'" name="trash"></ion-icon>
       </ion-fab-button>
+      <ion-fab-button (click)='editTables = !editTables'>
+        <ion-icon [attr.color]="editTables? 'danger' : 'success'" name="create"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)='openCatalogue()'><ion-icon name="book"></ion-icon></ion-fab-button>
       <ion-fab-button (click)='initTables()'><ion-icon name="refresh"></ion-icon></ion-fab-button>
     </ion-fab-list>
     <ion-fab-list side="start">
-        <ion-fab-button><ion-icon name="person-add"></ion-icon></ion-fab-button>
+      <ion-fab-button (click)='openAddUsersPage()' ><ion-icon name="person-add"></ion-icon></ion-fab-button>
       <ion-fab-button (click)='openUsersPage()'><ion-icon name="people"></ion-icon></ion-fab-button>
+      <ion-fab-button (click)='openPayments()'><ion-icon name="cash"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
 
@@ -51,18 +56,19 @@
         <ion-label>
             <h2>{{tablesData.position_table_name}}</h2>
         </ion-label>
-        <ion-buttons *ngIf="removeTables && isAdmin" slot='end'>
-          <!-- <ion-button (click)="removeTablesPosition(tablesData._id)"> -->
-          <ion-button (click)="removeTablesPosition(tablesData)">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        <ion-buttons slot='end'>
+          <ion-button *ngIf="removeTables && isAdmin" shape="round" (click)="removeTablesPosition(tablesData)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="editTables && isAdmin" shape="round" (click)="editTablesPositionModal(tablesData)">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-item-divider>
       <ion-col size='4' size-lg='3' *ngFor='let table of tablesData.tables'>
-        <ion-card [ngClass]="table.busy?'busy':'available'" (click)='order(table)'>
+        <ion-card [ngClass]="table.busy?'busy':'available'" (click)='order(table, tablesData.position_table)'>
           <ion-card-header>
-            <ion-card-title class="table_name">{{table.name}}</ion-card-title>
-            <!-- <ion-card-subtitle *ngIf="table.user">{{table.user}}{{table.user}}</ion-card-subtitle> -->
+            <ion-card-title class="table_name">{{tablesData.position_table}}{{table.id}}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>

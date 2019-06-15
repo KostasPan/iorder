@@ -2,7 +2,6 @@ import { AdminGuard } from './services/admin.guard';
 import { AuthGuard } from './services/auth.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { OrderPageModule } from './order/order/order.module';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -42,6 +41,21 @@ const routes: Routes = [
   {
     path: 'users',
     loadChildren: './users/users/users.module#UsersPageModule',
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'add-users',
+    loadChildren: './users/add-users/add-users.module#AddUsersPageModule',
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'payments',
+    loadChildren: './users/payments/payments.module#PaymentsPageModule',
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'catalogue',
+    loadChildren: './products/catalogue/catalogue.module#CataloguePageModule',
     canActivate: [AuthGuard, AdminGuard]
   },
 

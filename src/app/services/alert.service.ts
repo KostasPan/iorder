@@ -36,15 +36,16 @@ export class AlertService {
       message: message,
       buttons: [
         {
-          text: 'Yes',
+          text: 'No',
+          role: 'cancel',
           handler: () => {
-            alert.dismiss(true);
+            alert.dismiss(false);
           }
         },
         {
-          text: 'No',
+          text: 'Yes',
           handler: () => {
-            alert.dismiss(false);
+            alert.dismiss(true);
           }
         }
       ]

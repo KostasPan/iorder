@@ -24,8 +24,8 @@ export class TablesService {
     return this.http.get(`${ENV.BASEURL}/table/get-tables`);
   }
 
-  modifyTable() {
-    // TODO:
+  editTables(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/table/edit-tables`, body);
   }
 
   deleteTable(body) {

@@ -1,3 +1,4 @@
+import { SetTableModalComponent } from './../set-table-modal/set-table-modal.component';
 import { TablesShareService } from './../tables-share.service';
 import { AlertService } from './../../services/alert.service';
 import { UserPopoverComponent } from './../../popovers/user-popover/user-popover.component';
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { TablesService } from '../tables.service';
-import { PopoverController, Events } from '@ionic/angular';
+import { PopoverController, Events, ModalController } from '@ionic/angular';
+import { OverlayEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-tables',
@@ -22,6 +24,7 @@ export class TablesPage implements OnInit {
     public popoverController: PopoverController,
     private alertService: AlertService,
     private tablesShareService: TablesShareService,
+    private modalController: ModalController,
     public events: Events
   ) {}
 
@@ -31,6 +34,7 @@ export class TablesPage implements OnInit {
   username: '';
   isAdmin = false;
   removeTables = false;
+  editTables = false;
 
   ngOnInit() {
     // this.initTables();
@@ -75,36 +79,42 @@ export class TablesPage implements OnInit {
   }
 
   openUsersPage() {
-    // navigate to users page
     this.router.navigate(['/users']);
   }
 
-  // async removeTablesPosition(position) {
-  // //   await this.tablesService.deleteTable({ positionId: pId }).subscribe();
-  // //   await this.initTables();
-  // }
+  openPayments() {
+    this.router.navigate(['/payments']);
+  }
+
+  openAddUsersPage() {
+    this.router.navigate(['/add-users']);
+  }
+
+  openCatalogue() {
+    this.router.navigate(['/catalogue']);
+  }
 
   async removeTablesPosition(position) {
     const busytables = position.tables.filter(t => t.busy === true);
     if (busytables.length) {
       this.alertService.presentAlert(
         'Position Deletion',
-        'You cannot delete ' + position.position_table_name,
-        'There are ' + busytables.length + ' tables with unpaid orders.'
+        'You cannot delete `' + position.position_table_name + '`',
+        'There are `' + busytables.length + '` tables with unpaid orders.'
       );
     } else {
       const choice = await this.alertService
         .presentAlertChoices(
           'Position Deletion',
           '',
-          'Are you sure you want to delete ' +
+          'Are you sure you want to delete `' +
             position.position_table_name +
-            '?'
+            '`?'
         )
         .then(c => {
           return c;
         });
-      if (choice.data) {
+      if (choice.data === true) {
         await this.tablesService
           .deleteTable({ positionId: position._id })
           .subscribe();
@@ -113,7 +123,34 @@ export class TablesPage implements OnInit {
     }
   }
 
-  order(table) {
+  async editTablesPositionModal(tablesData) {
+    console.log(tablesData);
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: SetTableModalComponent,
+      cssClass: 'details-modal-css-50',
+      componentProps: {
+        _id: tablesData._id,
+        position_table_name: tablesData.position_table_name,
+        position_table: tablesData.position_table
+      }
+    });
+    modal.onDidDismiss().then((detail: OverlayEventDetail) => {
+      if (detail.data) {
+        if (detail.data.customized === true) {
+          const index = this.tablesd.indexOf(tablesData);
+          this.tablesd[index].position_table = detail.data.position_table;
+          this.tablesd[index].position_table_name =
+            detail.data.position_table_name;
+        }
+      }
+    });
+
+    await modal.present();
+  }
+
+  order(table, positionShort) {
+    table.name = positionShort + table.id;
+
     this.tablesShareService.setTable(table);
 
     if (!table.busy || table.user === this.username) {
@@ -122,7 +159,11 @@ export class TablesPage implements OnInit {
       this.alertService.presentAlert(
         'Access Restricted',
         '',
-        'Only ' + table.user + ' has access on table named ' + table.name + '.'
+        'Only `' +
+          table.user +
+          '` has access on table named `' +
+          table.name +
+          '`.'
       );
     }
   }

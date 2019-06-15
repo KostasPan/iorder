@@ -1,8 +1,9 @@
+import { ModalController } from '@ionic/angular';
+import { SetUserModalComponent } from './../set-user-modal/set-user-modal.component';
 import { AlertService } from './../../services/alert.service';
-import { ToastService } from './../../services/toast.service';
 import { UsersService } from './../users.service';
 import { Component, OnInit } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { OverlayEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-users',
@@ -11,67 +12,67 @@ import { TestBed } from '@angular/core/testing';
 })
 export class UsersPage implements OnInit {
   users = [];
-  total = 0;
-  user = {};
 
   constructor(
     private usersService: UsersService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
     this.initUsers();
   }
 
-  calcTotal() {
-    let total = 0;
-    this.users.forEach(el => {
-      total += el.total;
+  initUsers() {
+    this.usersService.getUsers().subscribe(data => {
+      console.log(data.users);
+      this.users = data.users;
     });
-    return total;
   }
 
-  async userPayoff(user) {
+  async deleteUser(user) {
     const choice = await this.alertService
       .presentAlertChoices(
-        'Payments',
-        '',
-        'Do you want to receive € ' +
-          user.total +
-          ' payments from ' +
-          user.username +
-          ' ?'
+        'User Deletion',
+        'Confirm',
+        'Would you like to permanently delete user `' + user.username + '` ?'
       )
       .then(c => {
         return c;
       });
 
-    if (choice.data) {
-      this.usersService.initTotal({ userId: user._id }).subscribe();
-      user.payoff = true;
-      user.ordersToGo = 0;
-      this.removeUser(user);
-      this.total = this.calcTotal();
+    if (choice.data === true) {
+      console.log(choice.data);
+      this.usersService.deleteUser({ userId: user._id }).subscribe(data => {
+        this.removeUserFromList(user);
+      });
     }
-    // this.test(user);
   }
 
-  removeUser(user) {
+  removeUserFromList(user) {
     this.users.splice(this.users.indexOf(user), 1);
   }
 
-  test(user) {
-    console.log(user._id);
-    // const k = this.users.findIndex(u => u._id === user._id);
-    const k = this.users.indexOf(user);
-    this.users[k].ordersToGo += 10;
-    console.log(this.users);
-  }
-
-  initUsers() {
-    this.usersService.getTotals().subscribe(data => {
-      this.users = data.totals;
-      this.total = this.calcTotal();
+  async setUserModal(user) {
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: SetUserModalComponent,
+      cssClass: 'details-modal-css-50',
+      componentProps: {
+        _id: user._id,
+        username: user.username,
+        admin: user.admin
+      }
     });
+    modal.onDidDismiss().then((detail: OverlayEventDetail) => {
+      if (detail.data) {
+        if (detail.data.customized === true) {
+          const index = this.users.indexOf(user);
+          this.users[index].admin = detail.data.admin;
+          this.users[index].username = detail.data.username;
+        }
+      }
+    });
+
+    await modal.present();
   }
 }

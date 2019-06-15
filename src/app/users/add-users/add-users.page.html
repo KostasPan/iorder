@@ -1,0 +1,48 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Add Users</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content padding>
+    <ion-grid>
+        <form (ngSubmit)="addUsers()" [formGroup]="addUsersForm" novalidate>
+          <ion-row justify-content-center>
+            <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+              <ion-item>
+                <ion-label position="stacked">New Username</ion-label>
+                <ion-input clearInput type="text" formControlName="username" name="username"></ion-input>
+              </ion-item>
+              <div class="alert" *ngIf="(addUsersForm.controls['username'].invalid || addUsersForm.controls['username'].pristine) && addUsersForm.controls['username'].touched">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                The name of the new user is required
+              </div>
+
+              <ion-item>
+                <ion-label position="stacked">New Password</ion-label>
+                <ion-input clearInput type="text" formControlName="password" name="password"></ion-input>
+              </ion-item>
+              <div class="alert" *ngIf="(addUsersForm.controls['password'].invalid || addUsersForm.controls['password'].pristine) && addUsersForm.controls['password'].touched">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                The password of the new user is required
+              </div>
+    
+              <ion-item>
+                <ion-label>Administrator</ion-label>
+                <ion-checkbox clearInput formControlName="admin" name="admin"></ion-checkbox>
+              </ion-item>
+
+            </ion-col>
+          </ion-row>
+          <ion-row justify-content-center>
+            <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+              <ion-button [disabled]="addUsersForm.invalid" expand='full' shape="round" type="submit">Create</ion-button>
+            </ion-col>
+          </ion-row>
+        </form>
+        
+      </ion-grid>
+</ion-content>

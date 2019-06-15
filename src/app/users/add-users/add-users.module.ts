@@ -5,15 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddTablesPage } from './add-tables.page';
-import { TablesService } from '../tables.service';
-import { LoadingService } from 'src/app/services/loading.service';
-import { ToastService } from 'src/app/services/toast.service';
+import { AddUsersPage } from './add-users.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: AddTablesPage
+    component: AddUsersPage
   }
 ];
 
@@ -25,7 +22,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AddTablesPage],
-  providers: [TablesService, ToastService, LoadingService]
+  declarations: [AddUsersPage]
 })
-export class AddTablesPageModule {}
+export class AddUsersPageModule {}

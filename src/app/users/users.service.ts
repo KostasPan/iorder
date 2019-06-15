@@ -15,4 +15,16 @@ export class UsersService {
   initTotal(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/total/init-total`, body);
   }
+  addUsers(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/register`, body);
+  }
+  getUsers(): Observable<any> {
+    return this.http.get(`${ENV.BASEURL}/users/get-users`);
+  }
+  deleteUser(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/users/delete-user`, body);
+  }
+  setUser(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/users/set-user`, body);
+  }
 }

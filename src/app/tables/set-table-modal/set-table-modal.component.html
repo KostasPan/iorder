@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-icon style="padding-left: 1em;" slot="start" name="close" (click)="myDismiss()"></ion-icon>      
+      <ion-title slot="start">Edit position</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid no-padding>
+    <form (ngSubmit)="setTablePos()" [formGroup]="setTableForm" novalidate>
+      <ion-row justify-content-center>
+        <ion-col align-self-center size-xs="12" size-sm="12" size-md="8" size-lg="6" size-xs="12">
+          <ion-item>
+            <ion-label position="stacked">New position name</ion-label>
+            <ion-input clearInput type="text" value={{position_table_name}} formControlName="position_table_name" name="position_table_name"></ion-input>
+          </ion-item>
+          <div class="alert" *ngIf="setTableForm.controls['position_table_name'].errors!==null && setTableForm.controls['position_table_name'].errors.required">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            A name for position table is required
+          </div>
+
+          <ion-item>
+            <ion-label position="stacked">New short position name</ion-label>
+            <ion-input clearInput type="text" value={{position_table}} formControlName="position_table" name="position_table"></ion-input>
+          </ion-item>
+          <div class="alert" *ngIf="setTableForm.controls['position_table'].errors !== null && setTableForm.controls['position_table'].errors.required">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            A name for position table short-name is required
+          </div>
+          <div class="alert" *ngIf="setTableForm.controls['position_table'].errors !== null && setTableForm.controls['position_table'].errors.minlength">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Position table short-name minimum length is 1
+          </div>
+          <div class="alert" *ngIf="setTableForm.controls['position_table'].errors !== null && setTableForm.controls['position_table'].errors.maxlength">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Position table short-name maximum length is 4
+          </div>
+
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
+</ion-content>
+
+<ion-button [disabled]="setTableForm.invalid" type="submit" (click)="setTablePos()" class="set-btn">
+  <ion-label>Set</ion-label>
+</ion-button>

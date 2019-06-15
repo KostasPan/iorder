@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { DetailsShareModule } from './products/details/details-share/details-share.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -17,14 +18,30 @@ import { TokenInterceptor } from './services/token-interceptor';
 import { IonicStorageModule } from '@ionic/storage';
 import { DetailsModalComponent } from './products/details/details-modal/details-modal.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { SetUserModalComponent } from './users/set-user-modal/set-user-modal.component';
+import { SetTableModalComponent } from './tables/set-table-modal/set-table-modal.component';
+import { SetProductComponent } from './products/set-product/set-product.component';
 
 @NgModule({
-  declarations: [AppComponent, DetailsModalComponent, ProgressBarComponent],
-  entryComponents: [DetailsModalComponent],
+  declarations: [
+    AppComponent,
+    DetailsModalComponent,
+    ProgressBarComponent,
+    SetUserModalComponent,
+    SetTableModalComponent,
+    SetProductComponent
+  ],
+  entryComponents: [
+    DetailsModalComponent,
+    SetUserModalComponent,
+    SetTableModalComponent,
+    SetProductComponent
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
     DetailsShareModule,
+    ReactiveFormsModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     AppRoutingModule

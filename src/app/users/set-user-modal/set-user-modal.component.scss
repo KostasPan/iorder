@@ -4,3 +4,10 @@
     color: #f44336; /* red */
     margin-left: 16px;
   }
+
+.set-btn {
+  --border-radius: 0;
+  margin: 0;
+  bottom: 0;
+  width: 100%;
+}
