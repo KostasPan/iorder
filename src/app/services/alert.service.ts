@@ -73,6 +73,7 @@ export class AlertService {
           text: 'OK',
           handler: () => {
             this.tokenService.deleteAuthToken();
+            this.tokenService.deleteAuthTokenStorage();
             this.router.navigate(['/login']);
           }
         }

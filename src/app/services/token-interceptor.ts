@@ -10,10 +10,8 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 
-// import { Observable } from 'rxjs';
-
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError, from } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { TokenService } from './token.service';
 import { Events } from '@ionic/angular';
@@ -38,47 +36,49 @@ export class TokenInterceptor implements HttpInterceptor {
 
     this.events.publish('showProgressBar');
 
-    const token = this.tokenService.getAuthToken();
-
-    if (token) {
-      headersConfig['Authorization'] = `Bearer ${token}`;
-    }
-    const _req = req.clone({
-      setHeaders: headersConfig
-      // withCredentials: true
-    });
-
-    return next.handle(_req).pipe(
-      map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          // console.log('event->', event);
-          this.events.publish('hideProgressBar');
+    return from(this.tokenService.getAuthTokenStorage()).pipe(
+      switchMap(token => {
+        if (token) {
+          headersConfig['Authorization'] = `Bearer ${token}`;
         }
-        return event;
-      }),
-      catchError((error: HttpErrorResponse) => {
-        // console.error(error);
-        let errorMessage: string;
-        if (error.error.msg) {
-          // unexpected joi error from server
-          errorMessage = error.error.msg[0].message;
-        } else if (error.error.message) {
-          // controlled error from server
-          errorMessage = error.error.message;
-          if (error.error.token === null) {
-            this.alertService.presentAlertDeathLogout(
-              'Your key has expired. You need to login again.'
-            );
-          }
-          // this.events.publish('hideProgressBar');
-          // this.router.navigate(['/login']);
-        } else {
-          // machine cannot reach server
-          errorMessage = 'Cannot reach server, check interconnection';
-        }
-        this.events.publish('hideProgressBar');
-        this.toastService.presentToast(errorMessage);
-        return throwError(error);
+        const _req = req.clone({
+          setHeaders: headersConfig
+          // withCredentials: true
+        });
+
+        return next.handle(_req).pipe(
+          map((event: HttpEvent<any>) => {
+            if (event instanceof HttpResponse) {
+              // console.log('event->', event);
+              this.events.publish('hideProgressBar');
+            }
+            return event;
+          }),
+          catchError((error: HttpErrorResponse) => {
+            // console.error(error);
+            let errorMessage: string;
+            if (error.error.msg) {
+              // unexpected joi error from server
+              errorMessage = error.error.msg[0].message;
+            } else if (error.error.message) {
+              // controlled error from server
+              errorMessage = error.error.message;
+              if (error.error.token === null) {
+                this.alertService.presentAlertDeathLogout(
+                  'Your key has expired. You need to login again.'
+                );
+              }
+              // this.events.publish('hideProgressBar');
+              // this.router.navigate(['/login']);
+            } else {
+              // machine cannot reach server
+              errorMessage = 'Cannot reach server, check interconnection';
+            }
+            this.events.publish('hideProgressBar');
+            this.toastService.presentToast(errorMessage);
+            return throwError(error);
+          })
+        );
       })
     );
   }

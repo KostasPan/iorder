@@ -50,12 +50,14 @@ export class LoginPage implements OnInit {
             console.log(data);
             this.loginForm.reset();
             this.tokenService.setAuthToken(data.token);
+            this.tokenService
+              .setAuthTokenStorage(data.token)
+              .then(() => this.router.navigate(['/tables']));
             // this.router
             //   .navigate(['tables'])
             //   .then(() =>
             //     this.loginForm['controls']['password'].setValue('00000000')
             //   );
-            this.router.navigate(['/tables']);
           },
           err => {
             console.log(err);

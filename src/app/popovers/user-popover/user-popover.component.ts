@@ -20,6 +20,7 @@ export class UserPopoverComponent implements OnInit {
   logout() {
     this.popoverController.dismiss();
     this.tokenService.deleteAuthToken();
+    this.tokenService.deleteAuthTokenStorage();
     this.router.navigate(['/login']);
   }
 }

@@ -13,8 +13,9 @@ export class TokenService {
 
   setAuthToken(token: string) {
     this.cookieService.set(this.authToken, token);
-    this.storage.set(this.authToken, token);
-    console.log('SET KEY');
+  }
+  setAuthTokenStorage(token: string) {
+    return this.storage.set(this.authToken, token);
   }
 
   getAuthToken() {
@@ -22,15 +23,16 @@ export class TokenService {
     //   .get(this.authToken)
     //   .then(data => console.log('test: ' + data));
     return this.cookieService.get(this.authToken);
-    // return this.storage.get(this.authToken);
   }
 
-  async getAuthTokenStorage() {
-    return await this.storage.get(this.authToken);
+  getAuthTokenStorage() {
+    return this.storage.get(this.authToken);
   }
 
   deleteAuthToken() {
     this.cookieService.delete(this.authToken);
+  }
+  deleteAuthTokenStorage() {
     this.storage.remove(this.authToken);
   }
 
