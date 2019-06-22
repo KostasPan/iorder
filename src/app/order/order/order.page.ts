@@ -1,3 +1,4 @@
+import { ShowTablesModalComponent } from './../../tables/show-tables-modal/show-tables-modal.component';
 import { TablesShareService } from './../../tables/tables-share.service';
 import { TokenService } from './../../services/token.service';
 import { AlertService } from './../../services/alert.service';
@@ -5,6 +6,8 @@ import { OrderService } from './../order.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OrderShareService } from '../order-share/order-share.service';
+import { ModalController } from '@ionic/angular';
+import { OverlayEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-order',
@@ -19,7 +22,8 @@ export class OrderPage implements OnInit {
     private orderService: OrderService,
     private tablesShareService: TablesShareService,
     private tokenService: TokenService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private modalController: ModalController
   ) {}
 
   // show = false;
@@ -30,6 +34,9 @@ export class OrderPage implements OnInit {
   total = 0;
   // adminViewMode = false;
   private tableId;
+  selectedTotal = 0;
+  orderChecked = false;
+  showPartlyPayoffBtn = false;
 
   ngOnInit() {
     // this.checkAdminViewMode().then(isAdmin => (this.adminViewMode = isAdmin));
@@ -45,6 +52,8 @@ export class OrderPage implements OnInit {
   ionViewWillEnter() {
     // get all unsent from service
     this.unsentProducts = this.orderShareService.getOrder();
+
+    this.unselectProducts();
   }
 
   sendProducts() {
@@ -69,6 +78,7 @@ export class OrderPage implements OnInit {
     this.products = [];
     this.hasProducts = false;
     this.total = 0;
+    this.selectedTotal = 0;
   }
 
   getProducts() {
@@ -78,8 +88,9 @@ export class OrderPage implements OnInit {
     this.orderService.getOrder({ tableId: this.tableId }).subscribe(
       data => {
         this.products = data.order;
-        this.calculateTotal();
+        this.total = this.calculateTotal(this.products);
         console.log(data.order);
+        this.orderChecked = true;
       },
       error => {
         if (error.error.auth === null) {
@@ -101,9 +112,60 @@ export class OrderPage implements OnInit {
     this.unsentProducts = this.orderShareService.getOrder();
   }
 
-  calculateTotal() {
-    this.total = 0;
-    this.products.forEach(el => (this.total += el.price));
+  calculateTotal(productsList) {
+    let total = 0;
+    productsList.forEach(el => (total += el.price));
+    return total;
+  }
+
+  selectProduct(product) {
+    if (this.unsentProducts.length <= 0) {
+      product.selected = !product.selected;
+      const selectedProd = this.products.filter(p => p.selected);
+      this.selectedTotal = this.calculateTotal(selectedProd);
+      if (selectedProd.length) {
+        this.showPartlyPayoffBtn = true;
+      }
+    } else {
+      this.showPartlyPayoffBtn = false;
+    }
+  }
+
+  unselectProducts() {
+    this.products
+      .filter(product => product.selected === true)
+      .map(product => (product.selected = false));
+    this.selectedTotal = 0;
+    this.showPartlyPayoffBtn = false;
+  }
+
+  payoffSelectedProducts() {
+    // get all user selected products' ids
+    const selectedProdIds = this.products
+      .filter(p => p.selected)
+      .map(p => p._id);
+
+    if (selectedProdIds.length === this.products.length) {
+      // user selects all products, payoff all
+      this.payoffProducts();
+    } else {
+      // user selects several prods, partly payoff
+      this.orderService
+        .partlyPayoffOrder({
+          p_ids: selectedProdIds,
+          total: this.selectedTotal
+        })
+        .subscribe(data => {
+          this.removeSelectedProducts();
+          this.selectedTotal = 0;
+          this.total = this.calculateTotal(this.products);
+        });
+    }
+  }
+
+  removeSelectedProducts() {
+    this.products = this.products.filter(p => !p.selected);
+    this.selectedTotal = 0;
   }
 
   categories() {
@@ -113,6 +175,42 @@ export class OrderPage implements OnInit {
       this.tableId,
       'categories'
     ]);
+  }
+
+  async openTablesModal() {
+    const selectedProdIds = this.products
+      .filter(p => p.selected)
+      .map(p => p._id);
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: ShowTablesModalComponent,
+      cssClass: 'details-modal-css-100',
+      componentProps: {
+        tableName: this.tableName,
+        tableId: this.tableId
+      }
+    });
+    modal.onDidDismiss().then((detail: OverlayEventDetail) => {
+      if (detail.data.tableid) {
+        // send api move order
+        const selectedOrdersIds = this.products
+          .filter(p => p.selected)
+          .map(p => p._id);
+        this.orderService
+          .moveOrder({
+            fromtableid: this.tableId,
+            totableid: detail.data.tableid,
+            selectedorders: selectedOrdersIds,
+            moveall:
+              this.products.length === selectedOrdersIds.length ? true : false
+          })
+          .subscribe(data => {
+            this.removeSelectedProducts();
+            this.total = this.calculateTotal(this.products);
+          });
+      }
+    });
+
+    await modal.present();
   }
 
   async checkAdminViewMode() {

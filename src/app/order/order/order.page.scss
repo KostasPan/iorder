@@ -1,9 +1,15 @@
+  .selected {
+    // --color: rgb(229, 149, 149);
+    --background: #EFDFC9;
+  }
+
   .noOrderText {
     text-align: center;
   }
 
   .send-btn {
     --border-radius: 0;
+    height: 50px;
     margin: 0;
     bottom: 0;
     width: 100%;
@@ -12,9 +18,23 @@
   .payoff-btn {
     --border-radius: 0;
     --background: #01aa3a;
+    height: 50px;
     margin: 0;
     bottom: 0;
     width: 100%;
+  }
+
+  .partly-payoff-btn {
+    --border-radius: 0;
+    --background: #C0AE95;
+    height: 50px;
+    margin: 0;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .move-btn {
+    --background: #7A7FA3;
   }
 
   #addImage {

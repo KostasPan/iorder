@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-icon style="padding-left: 1em;" slot="start" name="close" (click)="myDismiss(null)"></ion-icon>      
+      <ion-title slot="start">Select Table</ion-title>
+  </ion-toolbar>
+</ion-header>
+  
+<ion-content>
+  <ion-grid>
+    <ion-row *ngFor='let tablesData of tablesd'>
+      <ion-item-divider>
+        <ion-label>
+            <h2>{{tablesData.position_table_name}}</h2>
+        </ion-label>
+      </ion-item-divider>
+      <ion-col size='4' size-lg='3' *ngFor='let table of tablesData.tables'>
+        <div [ngClass]="table._id===tableId?'disabled':''">
+          <ion-card [ngClass]="table.busy?'busy':'available'" (click)='select(table, tablesData.position_table)'>
+            <ion-card-header>
+              <ion-card-title class="table_name">{{tablesData.position_table}}{{table.id}}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

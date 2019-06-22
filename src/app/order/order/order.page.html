@@ -4,8 +4,11 @@
     <ion-title slot="start"><ion-text>{{tableName}}</ion-text></ion-title>
     <!-- <ion-title *ngIf="adminViewMode" slot="end" color="medium"><ion-text>admin</ion-text></ion-title> -->
     <ion-buttons slot="end">
-      <ion-chip *ngIf="total && !(unsentProducts.length && unsentProducts)" (click)="payoffProducts()">
+      <ion-chip *ngIf="total && !(unsentProducts.length && unsentProducts) && !selectedTotal">
         € {{total}}
+      </ion-chip>
+      <ion-chip *ngIf="selectedTotal">
+        € {{selectedTotal}}
       </ion-chip>
       <ion-button (click)='categories()'>
           <ion-icon slot="icon-only" name="add"></ion-icon>
@@ -18,11 +21,11 @@
 <div *ngIf="!(unsentProducts.length || products.length);then tapForProducts else showProducts"></div>
 
 <ng-template #tapForProducts>
-  <ion-content padding (click)='categories()'>
+  <ion-content padding *ngIf="orderChecked" (click)='categories()'>
     <ion-text color="medium" class="noOrderText">
       <h1>No products yet</h1>
     </ion-text>
-    <img id="addImage" src="assets/images/plus.png" alt="add-products">
+    <ion-img id="addImage" src="../assets/images/tap.png" alt="add-products"></ion-img>
     <ion-text color="medium" class="noOrderText">
       <h1>Tap here or <ion-icon slot="icon-only" name="add"></ion-icon> to add products</h1>
     </ion-text>
@@ -31,6 +34,11 @@
 
 <ng-template #showProducts>
   <ion-content no-padding >
+
+    <ion-fab *ngIf="selectedTotal" vertical="bottom" horizontal="end" slot="fixed" (click)="openTablesModal()">
+      <ion-fab-button class="move-btn"><ion-icon name="swap"></ion-icon></ion-fab-button>
+    </ion-fab>
+
     <ion-list>
       <ion-item *ngFor="let p of unsentProducts; let i = index">
         <ion-label>
@@ -46,36 +54,36 @@
         <ion-icon no-padding name='trash' slot="end" (click)='removeProduct(i)'></ion-icon>
       </ion-item>
     
-      <ion-item *ngFor="let p of products">
-        <ion-label>
-          <ion-text color='danger'>{{p.quantity}}</ion-text>
-          {{p.name}}
-        <ion-label text-wrap>
-          <ion-note *ngFor="let c of p.choices">
-            {{c.selected}}|
-          </ion-note>
-        </ion-label>
-        </ion-label>
-        <ion-chip slot="end" outline='true'>€ {{p.price}}</ion-chip>
-      </ion-item>
+      <div *ngFor="let p of products">
+        <ion-item (click)="selectProduct(p)" [ngClass]="p.selected? 'selected': ''">
+          <!-- <ion-icon *ngIf="p.selected" name="add"></ion-icon> -->
+          <ion-label>
+            <ion-text color='danger'>{{p.quantity}}</ion-text>
+            {{p.name}}
+          <ion-label text-wrap>
+            <ion-note *ngFor="let c of p.choices">
+              {{c.selected}}|
+            </ion-note>
+          </ion-label>
+          </ion-label>
+          <ion-chip slot="end" outline='true'>€ {{p.price}}</ion-chip>
+        </ion-item>
+      </div>
     </ion-list>
 
-    <!-- <ion-list>
-      <ion-item *ngFor="let p of products">
-        <ion-label>{{p.name}}</ion-label>
-        <ion-label slot="end">{{p.price}}</ion-label>
-      </ion-item>
-    </ion-list> -->
-  
   </ion-content>
   <!-- <div *ngIf="!adminViewMode"> -->
     <ion-button *ngIf="unsentProducts.length && unsentProducts" class="send-btn" (click)="sendProducts()">
       <ion-icon slot="start" name="send"></ion-icon>
       Send Products
     </ion-button>
-    <ion-button *ngIf="!(unsentProducts.length && unsentProducts)" class="payoff-btn" (click)="payoffProducts()">
+    <ion-button *ngIf="!(unsentProducts.length && unsentProducts) && !selectedTotal" class="payoff-btn" (click)="payoffProducts()">
       <ion-icon slot="start" name="cash"></ion-icon>
       Payoff € {{total}}
+    </ion-button>
+    <ion-button *ngIf="!(unsentProducts.length && unsentProducts) && selectedTotal" class="partly-payoff-btn" (click)="payoffSelectedProducts()">
+      <ion-icon slot="start" name="cash"></ion-icon>
+      Partly Payoff € {{selectedTotal}}
     </ion-button>
   <!-- </div> -->
 </ng-template>

@@ -21,6 +21,7 @@ import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { SetUserModalComponent } from './users/set-user-modal/set-user-modal.component';
 import { SetTableModalComponent } from './tables/set-table-modal/set-table-modal.component';
 import { SetProductComponent } from './products/set-product/set-product.component';
+import { ShowTablesModalComponent } from './tables/show-tables-modal/show-tables-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,13 +30,15 @@ import { SetProductComponent } from './products/set-product/set-product.componen
     ProgressBarComponent,
     SetUserModalComponent,
     SetTableModalComponent,
-    SetProductComponent
+    SetProductComponent,
+    ShowTablesModalComponent
   ],
   entryComponents: [
     DetailsModalComponent,
     SetUserModalComponent,
     SetTableModalComponent,
-    SetProductComponent
+    SetProductComponent,
+    ShowTablesModalComponent
   ],
   imports: [
     BrowserModule,

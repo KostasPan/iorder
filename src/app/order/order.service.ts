@@ -20,4 +20,12 @@ export class OrderService {
   payoffOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/total/set-total`, body);
   }
+
+  partlyPayoffOrder(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/total/set-partly-total`, body);
+  }
+
+  moveOrder(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/order/move-order`, body);
+  }
 }
