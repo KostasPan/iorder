@@ -22,6 +22,7 @@ import { SetUserModalComponent } from './users/set-user-modal/set-user-modal.com
 import { SetTableModalComponent } from './tables/set-table-modal/set-table-modal.component';
 import { SetProductComponent } from './products/set-product/set-product.component';
 import { ShowTablesModalComponent } from './tables/show-tables-modal/show-tables-modal.component';
+import { DiscountModalComponent } from './order/discount-modal/discount-modal.component';
 
 @NgModule({
   declarations: [
@@ -31,14 +32,16 @@ import { ShowTablesModalComponent } from './tables/show-tables-modal/show-tables
     SetUserModalComponent,
     SetTableModalComponent,
     SetProductComponent,
-    ShowTablesModalComponent
+    ShowTablesModalComponent,
+    DiscountModalComponent
   ],
   entryComponents: [
     DetailsModalComponent,
     SetUserModalComponent,
     SetTableModalComponent,
     SetProductComponent,
-    ShowTablesModalComponent
+    ShowTablesModalComponent,
+    DiscountModalComponent
   ],
   imports: [
     BrowserModule,

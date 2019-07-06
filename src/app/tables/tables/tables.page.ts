@@ -117,8 +117,7 @@ export class TablesPage implements OnInit {
       if (choice.data === true) {
         await this.tablesService
           .deleteTable({ positionId: position._id })
-          .subscribe();
-        await this.initTables();
+          .subscribe(() => this.initTables());
       }
     }
   }
@@ -137,7 +136,10 @@ export class TablesPage implements OnInit {
     modal.onDidDismiss().then((detail: OverlayEventDetail) => {
       if (detail.data) {
         if (detail.data.customized === true) {
-          const index = this.tablesd.indexOf(tablesData);
+          let index = this.positions.indexOf(tablesData.position_table_name);
+          this.positions[index] = detail.data.position_table_name;
+
+          index = this.tablesd.indexOf(tablesData);
           this.tablesd[index].position_table = detail.data.position_table;
           this.tablesd[index].position_table_name =
             detail.data.position_table_name;

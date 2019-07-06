@@ -1,3 +1,4 @@
+import { Discount } from './../discount-modal/discount';
 import { ShowTablesModalComponent } from './../../tables/show-tables-modal/show-tables-modal.component';
 import { TablesShareService } from './../../tables/tables-share.service';
 import { TokenService } from './../../services/token.service';
@@ -8,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrderShareService } from '../order-share/order-share.service';
 import { ModalController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core';
+import { DiscountModalComponent } from '../discount-modal/discount-modal.component';
 
 @Component({
   selector: 'app-order',
@@ -36,11 +38,25 @@ export class OrderPage implements OnInit {
   private tableId;
   selectedTotal = 0;
   orderChecked = false;
-  showPartlyPayoffBtn = false;
+  isSelectActive = false;
+  isAdmin = false;
+  discount = new Discount();
 
   ngOnInit() {
     // this.checkAdminViewMode().then(isAdmin => (this.adminViewMode = isAdmin));
+    this.tablesShareService.getTable().then(table => {
+      if ('discount' in table) {
+        this.discount.discount = table.discount.discount;
+        this.discount.type = table.discount.type;
+        this.discount.total = table.discount.total;
+        this.discount.isDiscountActive = table.discount.isDiscountActive;
+        this.discount.discountStr = table.discount.discountStr;
+        this.discount.discountedtotal = table.discount.discountedtotal;
+      }
+    });
+    this.checkIfAdmin();
     this.total = 0;
+    console.log(this.discount);
     this.tableName = this.activatedRoute.snapshot.params['tname'];
     this.tableId = this.activatedRoute.snapshot.params['id'];
     this.orderShareService.initOrder(this.tableName, this.tableId);
@@ -52,7 +68,6 @@ export class OrderPage implements OnInit {
   ionViewWillEnter() {
     // get all unsent from service
     this.unsentProducts = this.orderShareService.getOrder();
-
     this.unselectProducts();
   }
 
@@ -62,7 +77,6 @@ export class OrderPage implements OnInit {
       products: this.unsentProducts,
       tableId: this.tableId
     };
-
     this.orderService.setOrder(body).subscribe(() => {
       // reset unsentProducts
       this.unsentProducts = this.orderShareService.emptyOrder();
@@ -72,23 +86,35 @@ export class OrderPage implements OnInit {
   }
 
   payoffProducts() {
-    this.orderService
-      .payoffOrder({ tableId: this.tableId, total: this.total })
-      .subscribe();
+    const body = {
+      tableId: this.tableId,
+      total: this.total
+    };
+    if (this.discount.isDiscountActive) {
+      body.total = this.discount.discountedtotal;
+      this.discount.clearfunc();
+    }
+    this.orderService.payoffOrder(body).subscribe();
     this.products = [];
     this.hasProducts = false;
     this.total = 0;
     this.selectedTotal = 0;
+    this.isSelectActive = false;
+    this.clearDiscount();
   }
 
   getProducts() {
-    // get products from api server
-    // products = server products
-
     this.orderService.getOrder({ tableId: this.tableId }).subscribe(
       data => {
         this.products = data.order;
-        this.total = this.calculateTotal(this.products);
+        this.discount.total = this.total = this.calculateTotal(this.products);
+        if (
+          this.discount.isDiscountActive &&
+          this.discount.type === 'percentage'
+        ) {
+          this.products = this.calculateProductDisPrice(this.products);
+        }
+        this.updateDiscountedTotal();
         console.log(data.order);
         this.orderChecked = true;
       },
@@ -115,19 +141,58 @@ export class OrderPage implements OnInit {
   calculateTotal(productsList) {
     let total = 0;
     productsList.forEach(el => (total += el.price));
-    return total;
+    return +total.toFixed(2);
+  }
+
+  calculateDiscountedTotal(productsList) {
+    let total = 0;
+    productsList.forEach(el => (total += el.discountedPrice));
+    return +total.toFixed(2);
+  }
+
+  calculateProductDisPrice(productsList) {
+    productsList.forEach(p => {
+      p.discountedPrice = +(
+        p.price -
+        (this.discount.discount / 100) * p.price
+      ).toFixed(2);
+    });
+    return productsList;
+  }
+
+  updateDiscountedTotal() {
+    if (this.discount.isDiscountActive && this.discount.type === 'percentage') {
+      this.discount.discountedtotal = this.calculateDiscountedTotal(
+        this.products
+      );
+    } else if (
+      this.discount.isDiscountActive &&
+      this.discount.type === 'amount'
+    ) {
+      const t = this.calculateTotal(this.products) - this.discount.discount;
+      this.discount.discountedtotal = t <= 0 ? 0 : t;
+    }
   }
 
   selectProduct(product) {
     if (this.unsentProducts.length <= 0) {
       product.selected = !product.selected;
       const selectedProd = this.products.filter(p => p.selected);
-      this.selectedTotal = this.calculateTotal(selectedProd);
+      if (
+        this.discount.isDiscountActive &&
+        this.discount.type === 'percentage'
+      ) {
+        this.selectedTotal = this.calculateDiscountedTotal(selectedProd);
+      } else if (this.discount.type !== 'amount') {
+        this.selectedTotal = this.calculateTotal(selectedProd);
+      }
       if (selectedProd.length) {
-        this.showPartlyPayoffBtn = true;
+        this.isSelectActive = true;
+      } else {
+        this.isSelectActive = false;
       }
     } else {
-      this.showPartlyPayoffBtn = false;
+      this.isSelectActive = false;
     }
   }
 
@@ -136,7 +201,7 @@ export class OrderPage implements OnInit {
       .filter(product => product.selected === true)
       .map(product => (product.selected = false));
     this.selectedTotal = 0;
-    this.showPartlyPayoffBtn = false;
+    this.isSelectActive = false;
   }
 
   payoffSelectedProducts() {
@@ -158,7 +223,9 @@ export class OrderPage implements OnInit {
         .subscribe(data => {
           this.removeSelectedProducts();
           this.selectedTotal = 0;
+          this.isSelectActive = false;
           this.total = this.calculateTotal(this.products);
+          this.updateDiscountedTotal();
         });
     }
   }
@@ -166,6 +233,7 @@ export class OrderPage implements OnInit {
   removeSelectedProducts() {
     this.products = this.products.filter(p => !p.selected);
     this.selectedTotal = 0;
+    this.isSelectActive = false;
   }
 
   categories() {
@@ -204,13 +272,77 @@ export class OrderPage implements OnInit {
               this.products.length === selectedOrdersIds.length ? true : false
           })
           .subscribe(data => {
+            if (
+              this.discount.isDiscountActive &&
+              this.products.length === selectedOrdersIds.length
+            ) {
+              this.discount.clearfunc();
+            }
             this.removeSelectedProducts();
             this.total = this.calculateTotal(this.products);
+            if (
+              this.discount.isDiscountActive &&
+              this.discount.type === 'percentage'
+            ) {
+              this.discount.discountedtotal = this.calculateDiscountedTotal(
+                this.products
+              );
+              console.log('discounted total', this.discount.discountedtotal);
+            } else if (
+              this.discount.isDiscountActive &&
+              this.discount.type === 'amount'
+            ) {
+              const t =
+                this.calculateTotal(this.products) - this.discount.discount;
+              this.discount.discountedtotal = t <= 0 ? 0 : t;
+            }
           });
       }
     });
 
     await modal.present();
+  }
+
+  async makeDiscount() {
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: DiscountModalComponent,
+      cssClass: 'details-modal-css-50',
+      componentProps: {
+        total: this.calculateTotal(this.products)
+      }
+    });
+    modal.onDidDismiss().then((detail: OverlayEventDetail) => {
+      if (detail.data && detail.data.discount) {
+        this.unselectProducts();
+        this.discount.discountedtotal = detail.data.newtotal;
+        this.discount.discount = detail.data.discount;
+        this.discount.total = this.total;
+        this.discount.type = detail.data.type;
+        this.discount.isDiscountActive = true;
+        this.discount.discountStr = this.discount.discountStrFunc();
+        this.products = this.calculateProductDisPrice(this.products);
+        this.orderService
+          .setDiscount({ discount: this.discount, tableid: this.tableId })
+          .subscribe();
+      }
+      console.log(this.discount);
+    });
+    await modal.present();
+  }
+
+  clearDiscount() {
+    this.orderService
+      .unsetDiscount({ tableid: this.tableId })
+      .subscribe(data => {
+        this.discount.clearfunc();
+        this.unselectProducts();
+      });
+  }
+
+  checkIfAdmin() {
+    this.tokenService.getAuthStoragePayload().then(p => {
+      this.isAdmin = p.data.admin;
+    });
   }
 
   async checkAdminViewMode() {

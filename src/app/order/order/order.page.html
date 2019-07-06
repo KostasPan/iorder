@@ -4,12 +4,29 @@
     <ion-title slot="start"><ion-text>{{tableName}}</ion-text></ion-title>
     <!-- <ion-title *ngIf="adminViewMode" slot="end" color="medium"><ion-text>admin</ion-text></ion-title> -->
     <ion-buttons slot="end">
-      <ion-chip *ngIf="total && !(unsentProducts.length && unsentProducts) && !selectedTotal">
+      <!-- <ion-chip *ngIf="total && !(unsentProducts.length && unsentProducts) && !selectedTotal && !discount.isDiscountActive">
         € {{total}}
       </ion-chip>
       <ion-chip *ngIf="selectedTotal">
         € {{selectedTotal}}
       </ion-chip>
+      <ion-chip *ngIf="discount.isDiscountActive && !(unsentProducts.length && unsentProducts) && !selectedTotal">
+        € {{discount.discountedtotal}}
+      </ion-chip> -->
+
+      <ion-chip *ngIf="(total || selectedTotal || discount.isDiscountActive) && !(unsentProducts.length && unsentProducts)">
+        <div *ngIf="total && !(unsentProducts.length && unsentProducts) && !selectedTotal && !discount.isDiscountActive">
+          € {{total}}
+        </div>
+        <div *ngIf="selectedTotal">
+          € {{selectedTotal}}
+        </div>
+        <div *ngIf="discount.isDiscountActive && !(unsentProducts.length && unsentProducts) && !selectedTotal">
+          € {{discount.discountedtotal}}
+        </div>
+      </ion-chip>
+
+
       <ion-button (click)='categories()'>
           <ion-icon slot="icon-only" name="add"></ion-icon>
       </ion-button>
@@ -33,9 +50,32 @@
 </ng-template>
 
 <ng-template #showProducts>
+  <!-- an exei epileksei discount tote kanta portokali alliws mple -->
+  <ion-row *ngIf="isAdmin && !(unsentProducts.length && unsentProducts)">
+    <ion-col no-padding>
+      <ion-item lines="full" class="perscent" button (click)="makeDiscount()">
+        <ion-icon *ngIf="!discount.isDiscountActive" slot="start" class="perscent" name="trending-down"></ion-icon>
+        <ion-icon *ngIf="discount.isDiscountActive" slot="start" class="perscent" name="alert"></ion-icon>   
+        <ion-label *ngIf="!discount.isDiscountActive">
+          <ion-text>Give a discount</ion-text>
+        </ion-label>
+        <ion-label *ngIf="discount.isDiscountActive">
+          <ion-text>Discount</ion-text>
+        </ion-label>
+        <ion-icon *ngIf="!discount.isDiscountActive" class="perscent" slot="end" name="arrow-dropright"></ion-icon>
+        <ion-chip *ngIf="discount.isDiscountActive" color="warning" slot="end" outline='true'>{{discount.discountStr}}</ion-chip>
+      </ion-item>
+    </ion-col>
+    <ion-col *ngIf="discount.isDiscountActive" size-xs="2" size-sm="1" no-padding align-self-center >
+      <ion-item lines="full" button (click)="clearDiscount()">
+        <ion-icon class="perscent" name="close"></ion-icon>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
   <ion-content no-padding >
 
-    <ion-fab *ngIf="selectedTotal" vertical="bottom" horizontal="end" slot="fixed" (click)="openTablesModal()">
+    <ion-fab *ngIf="isSelectActive" vertical="bottom" horizontal="end" slot="fixed" (click)="openTablesModal()">
       <ion-fab-button class="move-btn"><ion-icon name="swap"></ion-icon></ion-fab-button>
     </ion-fab>
 
@@ -56,17 +96,18 @@
     
       <div *ngFor="let p of products">
         <ion-item (click)="selectProduct(p)" [ngClass]="p.selected? 'selected': ''">
-          <!-- <ion-icon *ngIf="p.selected" name="add"></ion-icon> -->
           <ion-label>
             <ion-text color='danger'>{{p.quantity}}</ion-text>
             {{p.name}}
-          <ion-label text-wrap>
-            <ion-note *ngFor="let c of p.choices">
-              {{c.selected}}|
-            </ion-note>
+            <ion-label text-wrap>
+              <ion-note *ngFor="let c of p.choices">
+                {{c.selected}}|
+              </ion-note>
+            </ion-label>
           </ion-label>
-          </ion-label>
-          <ion-chip slot="end" outline='true'>€ {{p.price}}</ion-chip>
+          <ion-chip *ngIf="!discount.isDiscountActive || discount.type==='amount'" slot="end" outline='true'>€ {{p.price}}</ion-chip>
+          <ion-note *ngIf="discount.isDiscountActive && discount.type==='percentage'" slot="end"><del>€ {{p.price}}</del></ion-note>          
+          <ion-chip *ngIf="discount.isDiscountActive && discount.type==='percentage'" slot="end" outline='true'>€ {{p.discountedPrice}}</ion-chip>
         </ion-item>
       </div>
     </ion-list>
@@ -77,11 +118,15 @@
       <ion-icon slot="start" name="send"></ion-icon>
       Send Products
     </ion-button>
-    <ion-button *ngIf="!(unsentProducts.length && unsentProducts) && !selectedTotal" class="payoff-btn" (click)="payoffProducts()">
+    <ion-button *ngIf="!(unsentProducts.length && unsentProducts) && !selectedTotal && !discount.isDiscountActive" class="payoff-btn" (click)="payoffProducts()">
       <ion-icon slot="start" name="cash"></ion-icon>
       Payoff € {{total}}
     </ion-button>
-    <ion-button *ngIf="!(unsentProducts.length && unsentProducts) && selectedTotal" class="partly-payoff-btn" (click)="payoffSelectedProducts()">
+    <ion-button *ngIf="!(unsentProducts.length && unsentProducts) && !selectedTotal && discount.isDiscountActive" class="dis-payoff-btn" (click)="payoffProducts()">
+      <ion-icon slot="start" name="cash"></ion-icon>
+      Payoff € {{discount.discountedtotal}}
+    </ion-button>
+    <ion-button *ngIf="!(unsentProducts.length && unsentProducts) && selectedTotal && discount.type!=='amount'" class="partly-payoff-btn" (click)="payoffSelectedProducts()">
       <ion-icon slot="start" name="cash"></ion-icon>
       Partly Payoff € {{selectedTotal}}
     </ion-button>

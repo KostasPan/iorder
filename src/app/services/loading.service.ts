@@ -13,7 +13,7 @@ export class LoadingService {
     this.loading = await this.loadingController.create({
       message: 'Please wait...',
       keyboardClose: true,
-      duration: 8000
+      duration: 16000
     });
     return await this.loading.present();
   }

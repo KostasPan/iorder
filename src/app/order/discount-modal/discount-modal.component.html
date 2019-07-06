@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-icon style="padding-left: 1em;" slot="start" name="close" (click)="myDismiss(null, null, null)"></ion-icon>      
+      <ion-title slot="start">Setting up discount</ion-title>
+  </ion-toolbar>
+</ion-header>
+  
+<ion-segment color="warning" (ionChange)="segmentChanged($event)" value="percentage">
+  <ion-segment-button value="percentage">
+    <ion-label>Percentage</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="amount">
+    <ion-label>Exact Amount</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<ion-content>
+  <div *ngIf="(segment==='percentage');then percentageTemplate else amountTemplate"></div>
+
+  <ng-template #percentageTemplate>
+    <ion-item lines="none">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title class="perscent">- {{percentage}} % </ion-card-title>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title color="primary">
+                    € {{newTotal}}
+                </ion-card-title>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-range min="0" max="50" step="10" snaps="true" class="perscent" pin="true" (ionChange)="discountChanged($event)">
+        <ion-label slot="start">0%</ion-label>
+        <ion-label slot="end">50%</ion-label>
+      </ion-range>
+    </ion-item>
+  </ng-template>
+
+  <ng-template #amountTemplate>
+      <ion-item lines="none">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-card>
+                  <ion-card-header>
+                    <ion-card-title class="perscent">
+                      <ion-input type="number" placeholder="0.00" (ionChange)="amountChanged($event)">
+                        <ion-label>- € </ion-label>
+                      </ion-input>
+                    </ion-card-title>
+                  </ion-card-header>
+                </ion-card>
+              </ion-col>
+              <ion-col>
+                <ion-card>
+                  <ion-card-header>
+                    <ion-card-title color="primary">
+                        € {{newAmountTotal}}
+                    </ion-card-title>
+                  </ion-card-header>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+  </ng-template>
+</ion-content>
+
+<ion-button *ngIf="segment==='percentage'" [disabled]="total===newTotal" class="discount-btn" (click)="myDismiss(percentage, newTotal, segment)">
+  <ion-icon slot="start" name="trending-down"></ion-icon>
+  Discount
+</ion-button>
+
+<ion-button *ngIf="segment==='amount'" [disabled]="amount===0 || amount>total" class="discount-btn" (click)="myDismiss(amount, newAmountTotal, segment)">
+  <ion-icon slot="start" name="trending-down"></ion-icon>
+  Discount
+</ion-button>

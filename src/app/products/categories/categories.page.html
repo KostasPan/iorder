@@ -2,6 +2,11 @@
   <ion-toolbar>
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>categories</ion-title>
+    <ion-buttons slot='end'>
+      <ion-button (click)='goToOrderList()'>
+        <ion-icon slot="icon-only" name="list-box"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -9,7 +14,7 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col size='4' size-lg='3' *ngFor='let category of categories'>
+      <ion-col size='6' size-lg='3' *ngFor='let category of categories'>
         <ion-card (click)='products(category)'>
           <ion-card-content>
             {{category}}

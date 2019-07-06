@@ -11,10 +11,10 @@ export class ToastService {
     const toast = await this.toastController.create({
       message: errorMessage,
       showCloseButton: true,
-      position: 'top',
+      position: 'bottom',
       closeButtonText: 'Close',
-      mode: 'ios',
-      duration: 4000
+      // mode: 'ios',
+      duration: 3000
     });
     toast.present();
   }
@@ -22,9 +22,9 @@ export class ToastService {
     const toast = await this.toastController.create({
       message: errorMessage,
       showCloseButton: true,
-      position: 'top',
+      position: 'bottom',
       closeButtonText: 'OK',
-      mode: 'ios',
+      // mode: 'ios',
       duration: 6000
     });
     toast.present();

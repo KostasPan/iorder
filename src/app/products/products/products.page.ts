@@ -7,6 +7,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ModalController } from '@ionic/angular';
 import { DetailsModalComponent } from '../details/details-modal/details-modal.component';
 import { OverlayEventDetail } from '@ionic/core';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-products',
@@ -21,7 +22,8 @@ export class ProductsPage implements OnInit {
     private toastService: ToastService,
     private modalController: ModalController,
     private router: Router,
-    private datailsService: DetailsShareDataService
+    private datailsService: DetailsShareDataService,
+    private location: Location
   ) {}
 
   private category: string;
@@ -76,5 +78,19 @@ export class ProductsPage implements OnInit {
 
   openDetailsPage() {
     this.router.navigate(['/details']);
+  }
+
+  goToOrderList() {
+    this.router.navigateByUrl(this.removeLastUrlTwoElement(this.router.url));
+    // this.location.back();
+    // this.location.back();
+  }
+
+  removeLastUrlTwoElement(url) {
+    const array = url.split('/');
+    console.log(array);
+    array.pop();
+    array.pop();
+    return array.join('/');
   }
 }

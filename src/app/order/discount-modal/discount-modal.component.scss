@@ -1,0 +1,46 @@
+ion-grid {
+    text-align: center;
+    padding-top: 7%;
+    // color: rgb(54, 128, 148);
+  }
+
+  ion-col {
+    padding: 1.5%;
+  }
+
+  ion-card {
+    margin: 0;
+    padding-left: 0%;
+    padding-right: 0%;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+    width: 100% !important;
+    
+    ion-card-header {
+        display: flex;
+        flex-direction: column;
+        height: 100% !important;
+        width: 100% !important;
+        justify-content: center;
+
+        ion-card-title {
+          font-weight: inherit !important;
+          text-align: center;
+        }
+    }
+  }
+
+  .perscent {
+    color: #F49E4C;
+  }
+
+  .discount-btn {
+    --border-radius: 0;
+    --background: #F49E4C;
+    height: 50px;
+    margin: 0;
+    bottom: 0;
+    width: 100%;
+  }

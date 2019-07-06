@@ -24,6 +24,15 @@
     width: 100%;
   }
 
+  .dis-payoff-btn {
+    --border-radius: 0;
+    --background: #F49E4C;
+    height: 50px;
+    margin: 0;
+    bottom: 0;
+    width: 100%;
+  }
+
   .partly-payoff-btn {
     --border-radius: 0;
     --background: #C0AE95;
@@ -31,6 +40,10 @@
     margin: 0;
     bottom: 0;
     width: 100%;
+  }
+
+  .perscent {
+    color: #F49E4C;
   }
 
   .move-btn {

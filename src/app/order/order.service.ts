@@ -12,20 +12,22 @@ export class OrderService {
   getOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/order/get-order`, body);
   }
-
   setOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/order/set-order`, body);
   }
-
   payoffOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/total/set-total`, body);
   }
-
   partlyPayoffOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/total/set-partly-total`, body);
   }
-
   moveOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/order/move-order`, body);
+  }
+  setDiscount(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/discount/set-discount`, body);
+  }
+  unsetDiscount(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/discount/unset-discount`, body);
   }
 }

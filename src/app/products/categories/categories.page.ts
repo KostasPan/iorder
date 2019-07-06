@@ -3,6 +3,7 @@ import { LoadingService } from './../../services/loading.service';
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../products.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-categories',
@@ -15,7 +16,9 @@ export class CategoriesPage implements OnInit {
     private loadingService: LoadingService,
     private toastService: ToastService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private location: Location,
+    private route: ActivatedRoute
   ) {}
 
   categories = [];
@@ -38,5 +41,18 @@ export class CategoriesPage implements OnInit {
       'categories',
       category
     ]);
+  }
+
+  goToOrderList() {
+    console.log(this.router.url);
+    console.log(this.removeLastUrlElement(this.router.url));
+    this.router.navigateByUrl(this.removeLastUrlElement(this.router.url));
+    // this.location.back();
+  }
+
+  removeLastUrlElement(url) {
+    const array = url.split('/');
+    array.pop();
+    return array.join('/');
   }
 }
