@@ -58,7 +58,12 @@ const routes: Routes = [
     loadChildren: './products/catalogue/catalogue.module#CataloguePageModule',
     canActivate: [AuthGuard, AdminGuard]
   },
-
+  {
+    path: 'show-tables-details',
+    loadChildren:
+      './tables/show-tables-details/show-tables-details.module#ShowTablesDetailsPageModule',
+    canActivate: [AuthGuard, AdminGuard]
+  },
   // redirect to home
   { path: '**', redirectTo: 'tables' }
 ];

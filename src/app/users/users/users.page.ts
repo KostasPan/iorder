@@ -25,7 +25,9 @@ export class UsersPage implements OnInit {
 
   initUsers() {
     this.usersService.getUsers().subscribe(data => {
-      console.log(data.users);
+      data.users.forEach(u => {
+        u.total = +u.total.toFixed(2);
+      });
       this.users = data.users;
     });
   }

@@ -44,6 +44,7 @@ export class OrderPage implements OnInit {
 
   ngOnInit() {
     // this.checkAdminViewMode().then(isAdmin => (this.adminViewMode = isAdmin));
+    this.checkIfAdmin();
     this.tablesShareService.getTable().then(table => {
       if ('discount' in table) {
         this.discount.discount = table.discount.discount;
@@ -51,12 +52,12 @@ export class OrderPage implements OnInit {
         this.discount.total = table.discount.total;
         this.discount.isDiscountActive = table.discount.isDiscountActive;
         this.discount.discountStr = table.discount.discountStr;
-        this.discount.discountedtotal = table.discount.discountedtotal;
+        this.discount.discountedtotal = +(+table.discount
+          .discountedtotal).toFixed(2);
       }
     });
-    this.checkIfAdmin();
     this.total = 0;
-    console.log(this.discount);
+    console.log(this.discount.discountedtotal, this.total, this.selectedTotal);
     this.tableName = this.activatedRoute.snapshot.params['tname'];
     this.tableId = this.activatedRoute.snapshot.params['id'];
     this.orderShareService.initOrder(this.tableName, this.tableId);
@@ -91,7 +92,7 @@ export class OrderPage implements OnInit {
       total: this.total
     };
     if (this.discount.isDiscountActive) {
-      body.total = this.discount.discountedtotal;
+      body.total = +(+this.discount.discountedtotal).toFixed(2);
       this.discount.clearfunc();
     }
     this.orderService.payoffOrder(body).subscribe();
@@ -106,7 +107,9 @@ export class OrderPage implements OnInit {
   getProducts() {
     this.orderService.getOrder({ tableId: this.tableId }).subscribe(
       data => {
+        data.order.forEach(p => (p.price = +p.price.toFixed(2)));
         this.products = data.order;
+        console.log(this.products);
         this.discount.total = this.total = this.calculateTotal(this.products);
         if (
           this.discount.isDiscountActive &&
@@ -169,7 +172,8 @@ export class OrderPage implements OnInit {
       this.discount.isDiscountActive &&
       this.discount.type === 'amount'
     ) {
-      const t = this.calculateTotal(this.products) - this.discount.discount;
+      let t = this.calculateTotal(this.products) - this.discount.discount;
+      t = +t.toFixed(2);
       this.discount.discountedtotal = t <= 0 ? 0 : t;
     }
   }
@@ -314,9 +318,9 @@ export class OrderPage implements OnInit {
     modal.onDidDismiss().then((detail: OverlayEventDetail) => {
       if (detail.data && detail.data.discount) {
         this.unselectProducts();
-        this.discount.discountedtotal = detail.data.newtotal;
-        this.discount.discount = detail.data.discount;
-        this.discount.total = this.total;
+        this.discount.discountedtotal = +(+detail.data.newtotal).toFixed(2);
+        this.discount.discount = +(+detail.data.discount).toFixed(2);
+        this.discount.total = +(+this.total).toFixed(2);
         this.discount.type = detail.data.type;
         this.discount.isDiscountActive = true;
         this.discount.discountStr = this.discount.discountStrFunc();
@@ -331,12 +335,14 @@ export class OrderPage implements OnInit {
   }
 
   clearDiscount() {
-    this.orderService
-      .unsetDiscount({ tableid: this.tableId })
-      .subscribe(data => {
-        this.discount.clearfunc();
-        this.unselectProducts();
-      });
+    if (this.isAdmin) {
+      this.orderService
+        .unsetDiscount({ tableid: this.tableId })
+        .subscribe(data => {
+          this.discount.clearfunc();
+          this.unselectProducts();
+        });
+    }
   }
 
   checkIfAdmin() {

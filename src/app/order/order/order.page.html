@@ -4,16 +4,6 @@
     <ion-title slot="start"><ion-text>{{tableName}}</ion-text></ion-title>
     <!-- <ion-title *ngIf="adminViewMode" slot="end" color="medium"><ion-text>admin</ion-text></ion-title> -->
     <ion-buttons slot="end">
-      <!-- <ion-chip *ngIf="total && !(unsentProducts.length && unsentProducts) && !selectedTotal && !discount.isDiscountActive">
-        € {{total}}
-      </ion-chip>
-      <ion-chip *ngIf="selectedTotal">
-        € {{selectedTotal}}
-      </ion-chip>
-      <ion-chip *ngIf="discount.isDiscountActive && !(unsentProducts.length && unsentProducts) && !selectedTotal">
-        € {{discount.discountedtotal}}
-      </ion-chip> -->
-
       <ion-chip *ngIf="(total || selectedTotal || discount.isDiscountActive) && !(unsentProducts.length && unsentProducts)">
         <div *ngIf="total && !(unsentProducts.length && unsentProducts) && !selectedTotal && !discount.isDiscountActive">
           € {{total}}
@@ -25,8 +15,6 @@
           € {{discount.discountedtotal}}
         </div>
       </ion-chip>
-
-
       <ion-button (click)='categories()'>
           <ion-icon slot="icon-only" name="add"></ion-icon>
       </ion-button>
@@ -34,7 +22,6 @@
   </ion-toolbar>
 </ion-header>
 
-<!-- <div *ngIf="!hasProducts;then tapForProducts else showProducts"></div> -->
 <div *ngIf="!(unsentProducts.length || products.length);then tapForProducts else showProducts"></div>
 
 <ng-template #tapForProducts>
@@ -50,7 +37,6 @@
 </ng-template>
 
 <ng-template #showProducts>
-  <!-- an exei epileksei discount tote kanta portokali alliws mple -->
   <ion-row *ngIf="isAdmin && !(unsentProducts.length && unsentProducts)">
     <ion-col no-padding>
       <ion-item lines="full" class="perscent" button (click)="makeDiscount()">

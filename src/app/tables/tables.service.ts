@@ -24,6 +24,10 @@ export class TablesService {
     return this.http.get(`${ENV.BASEURL}/table/get-tables`);
   }
 
+  getBusyTables(): Observable<any> {
+    return this.http.get(`${ENV.BASEURL}/table/get-busy-tables`);
+  }
+
   editTables(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/table/edit-tables`, body);
   }

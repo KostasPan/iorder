@@ -76,3 +76,13 @@
   </ion-grid>
 
 </ion-content>
+
+<!-- admin button for detailed view of busy tables when allbusy -->
+<ion-item *ngIf="isAdmin && allBusy" lines="full" button color='light' (click)="goToTablesDetails()">
+<!-- <ion-item *ngIf="isAdmin" lines="full" button color='light' (click)="goToTablesDetails()"> -->
+  <ion-icon slot="start" name="business"></ion-icon>   
+  <ion-label>
+    <ion-text>Tables time</ion-text>
+  </ion-label>
+  <ion-icon slot="end" name="arrow-dropright"></ion-icon>
+</ion-item>

@@ -6,6 +6,7 @@ export class Discount {
   type = '';
   discountStr = '';
   discountStrFunc() {
+    this.discount = +this.discount.toFixed(2);
     return this.type === 'percentage'
       ? '- ' + this.discount + ' %'
       : '- € ' + this.discount;

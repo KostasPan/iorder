@@ -26,9 +26,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
   @Output() dismissModalEvent = new EventEmitter<any>();
   details;
   detailsOpt;
-  productPrice;
-  quantity;
-  totalPrice;
+  productPrice = 0;
+  quantity = 0;
+  totalPrice = 0;
   comment = '';
 
   ngOnInit() {
@@ -39,7 +39,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       detailsOpt => (this.detailsOpt = detailsOpt)
     );
     this.detailsShareDataService.dataPrice.subscribe(
-      price => (this.productPrice = price)
+      price => (this.productPrice = +(+price).toFixed(2))
     );
     this.quantity = 1;
     this.totalPrice = this.productPrice;
@@ -51,12 +51,14 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   add() {
     this.quantity++;
-    this.totalPrice += this.productPrice;
+    this.totalPrice += +this.productPrice.toFixed(2);
+    this.totalPrice = +this.totalPrice.toFixed(2);
   }
   remove() {
     if (this.quantity > 1) {
       this.quantity--;
-      this.totalPrice -= this.productPrice;
+      this.totalPrice -= +this.productPrice.toFixed(2);
+      this.totalPrice = +this.totalPrice.toFixed(2);
     }
   }
 

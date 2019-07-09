@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title slot="start"><ion-text>View Details</ion-text></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content no-padding>
+      <ion-card class='busy' *ngFor="let t of tables">
+        <ion-row align-items-center>
+          <ion-col>
+            <ion-card-header class="ion-text-center">
+              <ion-card-title>{{t.position_table}}{{t.tables.id}}</ion-card-title>
+              <ion-card-subtitle>{{t.position_table_name}}</ion-card-subtitle>
+              <!-- <ion-card-subtitle *ngIf="t.tables.discount && t.tables.discount.discountStr">{{t.tables.discount.discountStr}}</ion-card-subtitle> -->
+            </ion-card-header>
+          </ion-col>
+          <ion-col size='7'>
+            <ion-item class="ion-text-end busy" no-padding lines='none'>
+              <ion-icon name="body" slot='end'></ion-icon>
+              <ion-label>{{t.tables.user}}</ion-label>
+            </ion-item>
+            <ion-item class="ion-text-end busy" no-padding lines='none'>
+              <ion-icon name="time" slot='end'></ion-icon>
+              <ion-label class="ion-text-wrap">{{timeFromNow(t.tables.orderTime)}}</ion-label>
+            </ion-item>
+            <!-- <ion-item class="ion-text-end" no-padding lines='none'>
+              <ion-icon name="cash" slot='end' size='small'></ion-icon>
+              <ion-label>€ 23.5</ion-label>
+            </ion-item> -->
+          </ion-col>
+        </ion-row>
+      </ion-card>
+</ion-content>

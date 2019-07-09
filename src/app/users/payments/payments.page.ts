@@ -59,16 +59,9 @@ export class PaymentsPage implements OnInit {
     this.users.splice(this.users.indexOf(user), 1);
   }
 
-  test(user) {
-    console.log(user._id);
-    // const k = this.users.findIndex(u => u._id === user._id);
-    const k = this.users.indexOf(user);
-    this.users[k].ordersToGo += 10;
-    console.log(this.users);
-  }
-
   initUsers() {
     this.usersService.getTotals().subscribe(data => {
+      data.totals.forEach(t => (t.total = +t.total.toFixed(2)));
       this.users = data.totals;
       this.total = this.calcTotal();
     });

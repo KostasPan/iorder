@@ -62,6 +62,7 @@ export class DiscountModalComponent implements OnInit {
 
   async myDismiss(discount, total, type) {
     console.log(this.total, discount, total, type);
+    discount = +(+discount).toFixed(2);
     await this.modalController.dismiss({
       oldtotal: this.total,
       discount: discount,
@@ -75,5 +76,6 @@ export class DiscountModalComponent implements OnInit {
         }
       }
     });
+    console.log(this.total, discount, total, type);
   }
 }

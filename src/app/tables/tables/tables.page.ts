@@ -2,8 +2,6 @@ import { SetTableModalComponent } from './../set-table-modal/set-table-modal.com
 import { TablesShareService } from './../tables-share.service';
 import { AlertService } from './../../services/alert.service';
 import { UserPopoverComponent } from './../../popovers/user-popover/user-popover.component';
-import { ToastService } from 'src/app/services/toast.service';
-import { LoadingService } from './../../services/loading.service';
 import { Component, OnInit } from '@angular/core';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
@@ -35,6 +33,7 @@ export class TablesPage implements OnInit {
   isAdmin = false;
   removeTables = false;
   editTables = false;
+  allBusy = false;
 
   ngOnInit() {
     // this.initTables();
@@ -71,7 +70,24 @@ export class TablesPage implements OnInit {
       console.log(data);
       this.positions = data.allTables.map(table => table.position_table_name);
       this.tablesd = data.allTables;
+      this.checkIfAllTablesBusy(
+        data.allTables
+          .map(t => t.length_tables)
+          .reduce(function(acc, val) {
+            return acc + val;
+          }, 0),
+        data.numOfBusyTables[0].total
+      );
     });
+  }
+
+  checkIfAllTablesBusy(allTables, busyTables) {
+    console.log(allTables, busyTables);
+    if (allTables && busyTables && allTables === busyTables) {
+      this.allBusy = true;
+    } else {
+      this.allBusy = false;
+    }
   }
 
   openAddTablesPage() {
@@ -168,6 +184,10 @@ export class TablesPage implements OnInit {
           '`.'
       );
     }
+  }
+
+  goToTablesDetails() {
+    this.router.navigate(['/show-tables-details']);
   }
 
   scrollTo(id) {
