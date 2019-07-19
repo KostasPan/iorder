@@ -7,9 +7,10 @@ import { OrderService } from './../order.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OrderShareService } from '../order-share/order-share.service';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core';
 import { DiscountModalComponent } from '../discount-modal/discount-modal.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-order',
@@ -25,7 +26,8 @@ export class OrderPage implements OnInit {
     private tablesShareService: TablesShareService,
     private tokenService: TokenService,
     private alertService: AlertService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private platform: Platform
   ) {}
 
   // show = false;
@@ -41,8 +43,11 @@ export class OrderPage implements OnInit {
   isSelectActive = false;
   isAdmin = false;
   discount = new Discount();
+  subscription;
+  popupIsPresent = false;
 
   ngOnInit() {
+    moment.locale('el');
     // this.checkAdminViewMode().then(isAdmin => (this.adminViewMode = isAdmin));
     this.checkIfAdmin();
     this.tablesShareService.getTable().then(table => {
@@ -67,16 +72,51 @@ export class OrderPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.subscription = this.platform.backButton.subscribeWithPriority(
+      9999999,
+      () => {
+        if (this.popupIsPresent === false) {
+          this.popupIsPresent = true;
+          this.back();
+        }
+      }
+    );
     // get all unsent from service
     this.unsentProducts = this.orderShareService.getOrder();
     this.unselectProducts();
+  }
+
+  ionViewWillLeave() {
+    this.subscription.unsubscribe();
+  }
+
+  async back() {
+    if (this.unsentProducts.length <= 0) {
+      this.router.navigate(['/tables']);
+    } else {
+      const choice = await this.alertService
+        .presentAlertChoices(
+          'Unsent Products',
+          this.tableName,
+          'Are you sure you want to navigate back to tables?'
+        )
+        .then(c => {
+          this.popupIsPresent = false;
+          return c;
+        });
+      if (choice.data === true) {
+        this.router.navigate(['/tables']);
+      }
+    }
   }
 
   sendProducts() {
     // send products to api server
     const body = {
       products: this.unsentProducts,
-      tableId: this.tableId
+      tableId: this.tableId,
+      table: this.tableName,
+      time: moment().format('HH:mm:ss')
     };
     this.orderService.setOrder(body).subscribe(() => {
       // reset unsentProducts

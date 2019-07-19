@@ -1,3 +1,4 @@
+import { CommentModalComponent } from './../comment-modal/comment-modal.component';
 import { SetTableModalComponent } from './../set-table-modal/set-table-modal.component';
 import { TablesShareService } from './../tables-share.service';
 import { AlertService } from './../../services/alert.service';
@@ -6,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { TablesService } from '../tables.service';
-import { PopoverController, Events, ModalController } from '@ionic/angular';
+import {
+  PopoverController,
+  Events,
+  ModalController,
+  Platform
+} from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core';
 
 @Component({
@@ -23,7 +29,8 @@ export class TablesPage implements OnInit {
     private alertService: AlertService,
     private tablesShareService: TablesShareService,
     private modalController: ModalController,
-    public events: Events
+    public events: Events,
+    private platform: Platform
   ) {}
 
   positions = [];
@@ -34,19 +41,36 @@ export class TablesPage implements OnInit {
   removeTables = false;
   editTables = false;
   allBusy = false;
+  popupIsPresent = false;
+  subscription;
 
   ngOnInit() {
     // this.initTables();
   }
 
   ionViewWillEnter() {
+    this.subscription = this.platform.backButton.subscribeWithPriority(
+      9999999,
+      () => {
+        if (this.popupIsPresent === false) {
+          this.confirmLogout();
+        }
+      }
+    );
     this.removeTables = false;
     this.getData();
     this.initTables();
   }
 
+  ionViewWillLeave() {
+    this.subscription.unsubscribe();
+  }
+
   confirmLogout() {
-    this.alertService.presentAlertConfirmLogout();
+    this.popupIsPresent = true;
+    this.alertService
+      .presentAlertConfirmLogout()
+      .then(() => (this.popupIsPresent = false));
   }
 
   async presentPopover(ev: any) {
@@ -163,6 +187,15 @@ export class TablesPage implements OnInit {
       }
     });
 
+    await modal.present();
+  }
+
+  async sendCommentModal() {
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: CommentModalComponent,
+      cssClass: 'details-modal-css-50',
+      componentProps: {}
+    });
     await modal.present();
   }
 

@@ -26,7 +26,7 @@ export class PaymentsPage implements OnInit {
     this.users.forEach(el => {
       total += el.total;
     });
-    return total;
+    return +total.toFixed(2);
   }
 
   async userPayoff(user) {
@@ -44,7 +44,7 @@ export class PaymentsPage implements OnInit {
         return c;
       });
 
-    if (choice.data) {
+    if (choice.data === true) {
       this.usersService.initTotal({ userId: user._id }).subscribe(data => {
         user.payoff = true;
         user.ordersToGo = 0;

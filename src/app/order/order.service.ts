@@ -15,6 +15,9 @@ export class OrderService {
   setOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/order/set-order`, body);
   }
+  sendComment(body): Observable<any> {
+    return this.http.post(`${ENV.BASEURL}/order/comment`, body);
+  }
   payoffOrder(body): Observable<any> {
     return this.http.post(`${ENV.BASEURL}/total/set-total`, body);
   }

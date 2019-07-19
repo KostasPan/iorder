@@ -71,6 +71,7 @@ export class AlertService {
         },
         {
           text: 'OK',
+          role: 'OK',
           handler: () => {
             this.tokenService.deleteAuthToken();
             this.tokenService.deleteAuthTokenStorage();
@@ -81,6 +82,9 @@ export class AlertService {
     });
 
     await alert.present();
+    return await alert.onDidDismiss().then(() => {
+      return false;
+    });
   }
 
   async presentAlertDeathLogout(message: string) {

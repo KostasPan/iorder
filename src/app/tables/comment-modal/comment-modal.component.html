@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-icon style="padding-left: 1em;" slot="start" name="close" (click)="myDismiss()"></ion-icon>      
+      <ion-title slot="start">Send Comment</ion-title>
+  </ion-toolbar>
+</ion-header>
+  
+<ion-content no-padding>
+  <ion-grid no-padding>
+    <form (ngSubmit)="setComment()" [formGroup]="setCommentForm" novalidate>
+      <ion-row justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <ion-item>
+            <ion-label position="stacked">Comment</ion-label>
+            <ion-input clearInput type="text" formControlName="comment" name="comment"></ion-input>
+          </ion-item>
+          <div class="alert" *ngIf="(setCommentForm.controls['comment'].invalid || setCommentForm.controls['comment'].pristine) && setCommentForm.controls['comment'].touched">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Comment is required
+          </div>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
+</ion-content>
+
+<ion-button [disabled]="setCommentForm.invalid" type="submit" (click)="setComment()" class="set-btn">
+  <ion-icon slot="start" name="paper-plane"></ion-icon>
+  <ion-label>Send</ion-label>
+</ion-button>

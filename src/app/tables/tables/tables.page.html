@@ -9,7 +9,7 @@
     </ion-buttons>
     <ion-title *ngIf=isAdmin slot="end" color="medium"><ion-text>Admin mode</ion-text></ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="sendCommentModal()">
           <ion-icon slot="icon-only" name="paper-plane"></ion-icon>
       </ion-button>
     </ion-buttons>

@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-back-button slot="start"></ion-back-button>
+    <!-- <ion-back-button slot="start"></ion-back-button> -->
+    <ion-buttons slot="start" shape="round">
+        <ion-button slot="start" (click)="back()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     <ion-title slot="start"><ion-text>{{tableName}}</ion-text></ion-title>
     <!-- <ion-title *ngIf="adminViewMode" slot="end" color="medium"><ion-text>admin</ion-text></ion-title> -->
     <ion-buttons slot="end">

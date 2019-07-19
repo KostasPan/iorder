@@ -23,6 +23,7 @@ import { SetTableModalComponent } from './tables/set-table-modal/set-table-modal
 import { SetProductComponent } from './products/set-product/set-product.component';
 import { ShowTablesModalComponent } from './tables/show-tables-modal/show-tables-modal.component';
 import { DiscountModalComponent } from './order/discount-modal/discount-modal.component';
+import { CommentModalComponent } from './tables/comment-modal/comment-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { DiscountModalComponent } from './order/discount-modal/discount-modal.co
     SetTableModalComponent,
     SetProductComponent,
     ShowTablesModalComponent,
-    DiscountModalComponent
+    DiscountModalComponent,
+    CommentModalComponent
   ],
   entryComponents: [
     DetailsModalComponent,
@@ -41,7 +43,8 @@ import { DiscountModalComponent } from './order/discount-modal/discount-modal.co
     SetTableModalComponent,
     SetProductComponent,
     ShowTablesModalComponent,
-    DiscountModalComponent
+    DiscountModalComponent,
+    CommentModalComponent
   ],
   imports: [
     BrowserModule,
