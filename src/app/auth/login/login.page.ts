@@ -1,3 +1,6 @@
+import { ModalController } from '@ionic/angular';
+import { IpModalComponent } from './../ip-modal/ip-modal.component';
+import { environment as ENV } from './../../../environments/environment';
 import { TokenService } from './../../services/token.service';
 import { Router } from '@angular/router';
 import { AuthService } from './../auth.service';
@@ -10,7 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss']
+  styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
@@ -25,7 +28,8 @@ export class LoginPage implements OnInit {
     private fb: FormBuilder,
     private loadingService: LoadingService,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -35,7 +39,7 @@ export class LoginPage implements OnInit {
   init() {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -46,7 +50,7 @@ export class LoginPage implements OnInit {
       .presentLoading()
       .then(() => {
         this.authService.loginUser(this.loginForm.value).subscribe(
-          data => {
+          (data) => {
             console.log(data);
             this.loginForm.reset();
             this.tokenService.setAuthToken(data.token);
@@ -59,7 +63,7 @@ export class LoginPage implements OnInit {
             //     this.loginForm['controls']['password'].setValue('00000000')
             //   );
           },
-          err => {
+          (err) => {
             console.log(err);
             let errorMessage: string;
             if (err.error.msg) {
@@ -89,5 +93,20 @@ export class LoginPage implements OnInit {
       this.passwordType = 'text';
       this.passwordShownIcon = 'eye';
     }
+  }
+
+  async openIPModal() {
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: IpModalComponent,
+      cssClass: 'details-modal-css-50',
+    });
+    // modal.onDidDismiss().then((detail: OverlayEventDetail) => {
+    //   if (detail.data) {
+    //     if (detail.data.updateUI === true) {
+    //       this.getAllProducts();
+    //     }
+    //   }
+    // });
+    await modal.present();
   }
 }

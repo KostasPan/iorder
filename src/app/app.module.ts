@@ -24,6 +24,7 @@ import { SetProductComponent } from './products/set-product/set-product.componen
 import { ShowTablesModalComponent } from './tables/show-tables-modal/show-tables-modal.component';
 import { DiscountModalComponent } from './order/discount-modal/discount-modal.component';
 import { CommentModalComponent } from './tables/comment-modal/comment-modal.component';
+import { IpModalComponent } from './auth/ip-modal/ip-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CommentModalComponent } from './tables/comment-modal/comment-modal.comp
     SetProductComponent,
     ShowTablesModalComponent,
     DiscountModalComponent,
-    CommentModalComponent
+    CommentModalComponent,
+    IpModalComponent,
   ],
   entryComponents: [
     DetailsModalComponent,
@@ -44,7 +46,8 @@ import { CommentModalComponent } from './tables/comment-modal/comment-modal.comp
     SetProductComponent,
     ShowTablesModalComponent,
     DiscountModalComponent,
-    CommentModalComponent
+    CommentModalComponent,
+    IpModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,15 +56,15 @@ import { CommentModalComponent } from './tables/comment-modal/comment-modal.comp
     ReactiveFormsModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     StatusBar,
     SplashScreen,
     CookieService,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

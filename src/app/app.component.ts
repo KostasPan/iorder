@@ -1,3 +1,4 @@
+import { IpAddressService } from './services/ip-address.service';
 import { TokenService } from './services/token.service';
 import { Component } from '@angular/core';
 
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html'
+  templateUrl: 'app.component.html',
 })
 export class AppComponent {
   constructor(
@@ -16,10 +17,20 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private tokenService: TokenService,
-    private router: Router
+    private router: Router,
+    private ipService: IpAddressService
   ) {
     this.initializeApp();
+    // if (there are admins in database) {
+
+    // } else {
+    this.ipService.getIpAddress().then((ip) => {
+      if (ip) {
+        this.ipService.setBASEURL(ip);
+      }
+    });
     this.automaticLogin();
+    // }
   }
 
   initializeApp() {
@@ -33,7 +44,7 @@ export class AppComponent {
   // TODO: allagi! kathe fora pou epilegw url apo tin bara
   //       epistrefw ksana sto ../tables
   automaticLogin() {
-    this.tokenService.getAuthTokenStorage().then(authToken => {
+    this.tokenService.getAuthTokenStorage().then((authToken) => {
       if (authToken) {
         this.router.navigate(['/tables']);
       } else {

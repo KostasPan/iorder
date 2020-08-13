@@ -3,9 +3,18 @@
   <ion-grid>
     <ion-row justify-content-center>
       <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
-        <div text-center>
-          <h4>Login iOrder</h4>
+        <div class="settings-btn">
+          <ion-button (click)="openIPModal()"
+            fill="clear" color="secondary">
+            <ion-icon no-padding slot="icon-only" name="settings"></ion-icon>
+          </ion-button>
         </div>
+        <div class="logo">
+            <img src="../assets/images/logo-iorder.png">
+        </div>
+        <!-- <div text-center>
+          <h4>iOrder</h4>
+        </div> -->
         <div padding>
           <form (ngSubmit)="loginUser()" [formGroup]="loginForm" novalidate>
             <ion-item>

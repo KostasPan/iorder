@@ -25,6 +25,19 @@ ion-icon {
     margin-right: 2vh;
 }
 
+.logo {
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.85;
+    width: 45%;
+}
+
+.settings-btn {
+    position: fixed;
+    right: 0;
+    top: 3em;
+}
+
 @media (min-width: 240px) and (max-width: 768px) {
     ion-grid {
         background: $white-color;

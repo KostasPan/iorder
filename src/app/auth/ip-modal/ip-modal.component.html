@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-icon style="padding-left: 1em;" slot="start" name="close" (click)="myDismiss()"></ion-icon>      
+      <ion-title slot="start">Set ip-address</ion-title>
+  </ion-toolbar>
+</ion-header>
+  
+<ion-content no-padding>
+  <ion-grid no-padding>
+    <form (ngSubmit)="setIpAddress()" [formGroup]="setIpAddressForm" novalidate>
+      <ion-row justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <!-- <ion-item>
+            <ion-input clearInput placeholder="0.0.0.0" type="text" [(ngModel)]="ipaddress" name="comment"></ion-input>
+          </ion-item> -->
+
+          <ion-item>
+            <ion-input clearInput type="text" formControlName="ip" name="ip"></ion-input>
+          </ion-item>
+          <div class="alert" *ngIf="(setIpAddressForm.controls['ip'].invalid || setIpAddressForm.controls['ip'].pristine) && setIpAddressForm.controls['ip'].touched">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Ip address is required
+          </div>
+
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
+</ion-content>
+
+<ion-button [disabled]="setIpAddressForm.invalid" type="submit" (click)="setIpAddress()" class="set-btn">
+  <ion-icon slot="start" name="build"></ion-icon>
+  <ion-label>Set ip</ion-label>
+</ion-button>
