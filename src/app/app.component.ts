@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: 'app.component.html',
 })
 export class AppComponent {
+  navigate: any;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -20,6 +21,7 @@ export class AppComponent {
     private router: Router,
     private ipService: IpAddressService
   ) {
+    this.sideMenu();
     this.initializeApp();
     // if (there are admins in database) {
 
@@ -51,5 +53,35 @@ export class AppComponent {
         this.router.navigate(['/']);
       }
     });
+  }
+
+  sideMenu() {
+    this.navigate = [
+      {
+        title: 'Catalogue',
+        url: 'catalogue',
+        icon: 'book',
+      },
+      {
+        title: 'Users',
+        url: 'users',
+        icon: 'people',
+      },
+      {
+        title: 'Add Users',
+        url: 'add-users',
+        icon: 'person-add',
+      },
+      {
+        title: 'Add Tables',
+        url: 'add-tables',
+        icon: 'add-circle-outline',
+      },
+      {
+        title: 'Payments',
+        url: 'payments',
+        icon: 'cash',
+      },
+    ];
   }
 }

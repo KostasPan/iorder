@@ -4,18 +4,18 @@
       <ion-title slot="start">Set ip-address</ion-title>
   </ion-toolbar>
 </ion-header>
-  
-<ion-content no-padding>
-  <ion-grid no-padding>
+
+<ion-content class="ion-no-padding">
+  <ion-grid class="ion-no-padding">
     <form (ngSubmit)="setIpAddress()" [formGroup]="setIpAddressForm" novalidate>
-      <ion-row justify-content-center>
-        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-align-self-center" size-md="6" size-lg="5" size-xs="12">
           <!-- <ion-item>
             <ion-input clearInput placeholder="0.0.0.0" type="text" [(ngModel)]="ipaddress" name="comment"></ion-input>
           </ion-item> -->
 
           <ion-item>
-            <ion-input clearInput type="text" formControlName="ip" name="ip"></ion-input>
+            <ion-input clearInput type="text" placeholder="192.168.x.x" formControlName="ip" name="ip"></ion-input>
           </ion-item>
           <div class="alert" *ngIf="(setIpAddressForm.controls['ip'].invalid || setIpAddressForm.controls['ip'].pristine) && setIpAddressForm.controls['ip'].touched">
             <ion-icon name="information-circle-outline"></ion-icon>

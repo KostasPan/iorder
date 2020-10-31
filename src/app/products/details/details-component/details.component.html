@@ -37,9 +37,9 @@
       <ion-text color="medium">Optional selection</ion-text>
     </ion-list-header>
 
-    <ion-grid no-padding>
-      <ion-row no-padding *ngFor="let d of detailsOpt; let i = index">
-        <ion-col no-padding>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding" *ngFor="let d of detailsOpt; let i = index">
+        <ion-col class="ion-no-padding">
           <ion-item>
             <ion-label>{{d.type}}</ion-label>
             <ion-select multiple={{d.multiple}} [(ngModel)]="d.selected">
@@ -47,7 +47,7 @@
             </ion-select>
           </ion-item>
         </ion-col>
-        <ion-col no-padding size="2" align-self-center *ngIf="d.selected">
+        <ion-col class="ion-no-padding ion-align-self-center" size="2" *ngIf="d.selected">
           <ion-button (click)="clearSelected(d)" shape="round" size="small" fill="clear">
             <ion-icon size="small" slot="icon-only" name="close"></ion-icon>
           </ion-button>

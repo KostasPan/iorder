@@ -5,9 +5,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content no-padding>
+<ion-content class="ion-no-padding">
       <ion-card class='busy' *ngFor="let t of tables">
-        <ion-row align-items-center>
+        <ion-row class="ion-align-items-center">
           <ion-col>
             <ion-card-header class="ion-text-center">
               <ion-card-title>{{t.position_table}}{{t.tables.id}}</ion-card-title>
@@ -16,11 +16,11 @@
             </ion-card-header>
           </ion-col>
           <ion-col size='7'>
-            <ion-item class="ion-text-end busy" no-padding lines='none'>
+            <ion-item class="ion-text-end busy ion-no-padding" lines='none'>
               <ion-icon name="body" slot='end'></ion-icon>
               <ion-label>{{t.tables.user}}</ion-label>
             </ion-item>
-            <ion-item class="ion-text-end busy" no-padding lines='none'>
+            <ion-item class="ion-text-end busy ion-no-padding" lines='none'>
               <ion-icon name="time" slot='end'></ion-icon>
               <ion-label class="ion-text-wrap">{{timeFromNow(t.tables.orderTime)}}</ion-label>
             </ion-item>

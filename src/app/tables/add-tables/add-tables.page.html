@@ -7,11 +7,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <ion-grid>
     <form (ngSubmit)="addTables()" [formGroup]="addTablesForm" novalidate>
-      <ion-row justify-content-center>
-        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-align-self-center" size-md="6" size-lg="5" size-xs="12">
           <ion-item>
             <ion-label position="stacked">New Position Name</ion-label>
             <ion-input clearInput type="text" formControlName="positionName" name="positionName"></ion-input>
@@ -35,8 +35,8 @@
           </div>
         </ion-col>
       </ion-row>
-      <ion-row justify-content-center>
-        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-align-self-center" size-md="6" size-lg="5" size-xs="12">
           <ion-button [disabled]="addTablesForm.invalid" expand='full' shape="round" type="submit">Create</ion-button>
         </ion-col>
       </ion-row>

@@ -6,16 +6,16 @@
     </ion-toolbar>
   </ion-header>
   
-  <ion-content no-padding>
+  <ion-content class="ion-no-padding">
   
     <ion-list>
       <ion-item [attr.disabled]="u.ordersToGo ? '' : null"  
                 lines='full' button 
                 *ngFor="let u of users" (click)="userPayoff(u)">
-        <ion-icon no-padding name='person' slot="start"></ion-icon>
+        <ion-icon class="ion-no-padding" name='person' slot="start"></ion-icon>
         <ion-label>
           {{u.username}}
-          <ion-label *ngIf="u.ordersToGo > 0" text-wrap>
+          <ion-label *ngIf="u.ordersToGo > 0" class="ion-text-wrap">
             <ion-note color="danger">
               <ion-icon name="information-circle-outline"></ion-icon>
               has {{u.ordersToGo}} unpaid orders
@@ -23,8 +23,8 @@
           </ion-label>
         </ion-label>
         <ion-chip slot="end" outline='true'>€ {{u.total}}</ion-chip>
-        <ion-icon no-padding *ngIf="u.ordersToGo > 0 && u.payoff !== true" name='warning' slot="end"></ion-icon>
-        <ion-icon no-padding *ngIf="u.payoff === true" name="checkmark" slot="end"></ion-icon>
+        <ion-icon class="ion-no-padding" *ngIf="u.ordersToGo > 0 && u.payoff !== true" name='warning' slot="end"></ion-icon>
+        <ion-icon class="ion-no-padding" *ngIf="u.payoff === true" name="checkmark" slot="end"></ion-icon>
       </ion-item>
     </ion-list>
   

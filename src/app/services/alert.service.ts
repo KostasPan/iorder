@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
   constructor(
@@ -18,7 +18,7 @@ export class AlertService {
       header: header,
       subHeader: subheader,
       message: message,
-      buttons: ['OK']
+      buttons: ['OK'],
     });
 
     await alert.present();
@@ -29,7 +29,6 @@ export class AlertService {
     subheader: string,
     message: string
   ) {
-    let value;
     const alert = await this.alertController.create({
       header: header,
       subHeader: subheader,
@@ -38,24 +37,24 @@ export class AlertService {
         {
           text: 'No',
           role: 'cancel',
-          handler: () => {
-            alert.dismiss(false);
-          }
+          // handler: () => {
+          //   alert.dismiss(false);
+          // },
         },
         {
           text: 'Yes',
-          handler: () => {
-            alert.dismiss(true);
-          }
-        }
-      ]
+          role: 'confirm',
+        },
+      ],
     });
 
     await alert.present();
-    await alert.onDidDismiss().then(val => {
-      value = val;
+    return await alert.onDidDismiss().then((val) => {
+      if (val.role === 'confirm') {
+        val.data = true;
+      }
+      return val;
     });
-    return value;
   }
 
   // TODO: confirm logout alert
@@ -67,7 +66,7 @@ export class AlertService {
         {
           text: 'Cancel',
           role: 'cancel',
-          cssClass: 'secondary'
+          cssClass: 'secondary',
         },
         {
           text: 'OK',
@@ -76,9 +75,9 @@ export class AlertService {
             this.tokenService.deleteAuthToken();
             this.tokenService.deleteAuthTokenStorage();
             this.router.navigate(['/login']);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -98,9 +97,9 @@ export class AlertService {
           handler: () => {
             this.tokenService.deleteAuthToken();
             this.router.navigate(['/login']);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();

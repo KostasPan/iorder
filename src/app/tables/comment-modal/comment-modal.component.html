@@ -5,11 +5,11 @@
   </ion-toolbar>
 </ion-header>
   
-<ion-content no-padding>
-  <ion-grid no-padding>
+<ion-content class="ion-no-padding">
+  <ion-grid class="ion-no-padding">
     <form (ngSubmit)="setComment()" [formGroup]="setCommentForm" novalidate>
-      <ion-row justify-content-center>
-        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-align-self-center" size-md="6" size-lg="5" size-xs="12">
           <ion-item>
             <ion-label position="stacked">Comment</ion-label>
             <ion-input clearInput type="text" formControlName="comment" name="comment"></ion-input>

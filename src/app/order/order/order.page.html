@@ -30,7 +30,7 @@
 <div *ngIf="!(unsentProducts.length || products.length);then tapForProducts else showProducts"></div>
 
 <ng-template #tapForProducts>
-  <ion-content padding *ngIf="orderChecked" (click)='categories()'>
+  <ion-content class="ion-padding" *ngIf="orderChecked" (click)='categories()'>
     <ion-text color="medium" class="noOrderText">
       <h1>No products yet</h1>
     </ion-text>
@@ -43,7 +43,7 @@
 
 <ng-template #showProducts>
   <ion-row *ngIf="isAdmin && !(unsentProducts.length && unsentProducts)">
-    <ion-col no-padding>
+    <ion-col class="ion-no-padding">
       <ion-item lines="full" class="perscent" button (click)="makeDiscount()">
         <ion-icon *ngIf="!discount.isDiscountActive" slot="start" class="perscent" name="trending-down"></ion-icon>
         <ion-icon *ngIf="discount.isDiscountActive" slot="start" class="perscent" name="alert"></ion-icon>   
@@ -57,32 +57,30 @@
         <ion-chip *ngIf="discount.isDiscountActive" color="warning" slot="end" outline='true'>{{discount.discountStr}}</ion-chip>
       </ion-item>
     </ion-col>
-    <ion-col *ngIf="discount.isDiscountActive" size-xs="2" size-sm="1" no-padding align-self-center >
+    <ion-col *ngIf="discount.isDiscountActive" size-xs="2" size-sm="1" class="ion-no-padding ion-align-self-center" >
       <ion-item lines="full" button (click)="clearDiscount()">
         <ion-icon class="perscent" name="close"></ion-icon>
       </ion-item>
     </ion-col>
   </ion-row>
 
-  <ion-content no-padding >
-
+  <ion-content class="ion-no-padding" >
     <ion-fab *ngIf="isSelectActive" vertical="bottom" horizontal="end" slot="fixed" (click)="openTablesModal()">
       <ion-fab-button class="move-btn"><ion-icon name="swap"></ion-icon></ion-fab-button>
     </ion-fab>
-
     <ion-list>
       <ion-item *ngFor="let p of unsentProducts; let i = index">
         <ion-label>
           <ion-text color='danger'>{{p.quantity}}</ion-text>
           {{p.name}}
-        <ion-label text-wrap>
+        <ion-label class="ion-text-wrap">
           <ion-note *ngFor="let c of p.choices">
             {{c.selected}}|
           </ion-note>
         </ion-label>
         </ion-label>
         <ion-chip slot="end" outline='true'>€ {{p.price}}</ion-chip>
-        <ion-icon no-padding name='trash' slot="end" (click)='removeProduct(i)'></ion-icon>
+        <ion-icon class="ion-no-padding" name='trash' slot="end" (click)='removeProduct(i)'></ion-icon>
       </ion-item>
     
       <div *ngFor="let p of products">
@@ -90,7 +88,7 @@
           <ion-label>
             <ion-text color='danger'>{{p.quantity}}</ion-text>
             {{p.name}}
-            <ion-label text-wrap>
+            <ion-label class="ion-text-wrap">
               <ion-note *ngFor="let c of p.choices">
                 {{c.selected}}|
               </ion-note>

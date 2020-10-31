@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.page.html',
-  styleUrls: ['./payments.page.scss']
+  styleUrls: ['./payments.page.scss'],
 })
 export class PaymentsPage implements OnInit {
   users = [];
@@ -23,7 +23,7 @@ export class PaymentsPage implements OnInit {
 
   calcTotal() {
     let total = 0;
-    this.users.forEach(el => {
+    this.users.forEach((el) => {
       total += el.total;
     });
     return +total.toFixed(2);
@@ -40,12 +40,12 @@ export class PaymentsPage implements OnInit {
           user.username +
           '` ?'
       )
-      .then(c => {
+      .then((c) => {
         return c;
       });
 
     if (choice.data === true) {
-      this.usersService.initTotal({ userId: user._id }).subscribe(data => {
+      this.usersService.initTotal({ userId: user._id }).subscribe((data) => {
         user.payoff = true;
         user.ordersToGo = 0;
         this.removeUser(user);
@@ -60,8 +60,8 @@ export class PaymentsPage implements OnInit {
   }
 
   initUsers() {
-    this.usersService.getTotals().subscribe(data => {
-      data.totals.forEach(t => (t.total = +t.total.toFixed(2)));
+    this.usersService.getTotals().subscribe((data) => {
+      data.totals.forEach((t) => (t.total = +t.total.toFixed(2)));
       this.users = data.totals;
       this.total = this.calcTotal();
     });

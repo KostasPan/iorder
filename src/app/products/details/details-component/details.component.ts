@@ -6,14 +6,14 @@ import {
   OnDestroy,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
 } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-details-component',
   templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit, OnDestroy {
   constructor(
@@ -33,13 +33,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.detailsShareDataService.dataDetails.subscribe(
-      details => (this.details = details)
+      (details) => (this.details = details)
     );
     this.detailsShareDataService.dataOptionalDetails.subscribe(
-      detailsOpt => (this.detailsOpt = detailsOpt)
+      (detailsOpt) => (this.detailsOpt = detailsOpt)
     );
     this.detailsShareDataService.dataPrice.subscribe(
-      price => (this.productPrice = +(+price).toFixed(2))
+      (price) => (this.productPrice = +(+price).toFixed(2))
     );
     this.quantity = 1;
     this.totalPrice = this.productPrice;
@@ -69,7 +69,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   async presentAlert() {
     const alert = await this.alertController.create({
       message: 'You have to make an obligatory selection.',
-      buttons: ['OK']
+      buttons: ['OK'],
     });
     await alert.present();
   }
@@ -89,12 +89,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     order['quantity'] = this.quantity;
     order['choices'] = pref;
     order['comment'] = this.comment;
-    console.log(order);
-    let str = '';
-    order['choices'].forEach(c => {
-      str += c.selected + ',';
-    });
-    console.log(str);
+
+    // let str = '';
+    // order['choices'].forEach((c) => {
+    //   str += c.selected + ',';
+    // });
+    // console.log(str);
 
     // send on service
     this.orderShareService.pushToOrder(order);
@@ -105,12 +105,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   userChoices(details: Array<any>): Array<any> {
     const pref = [];
-    details.map(item => {
+    details.map((item) => {
       if (item.selected && item.selected.length) {
         pref.push({
           type: item.type,
           selected: item.selected,
-          multiple: item.multiple
+          multiple: item.multiple,
         });
       }
     });
@@ -118,8 +118,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   resetUserSelections() {
-    this.details.forEach(d => (d.selected = null));
-    this.detailsOpt.forEach(d => (d.selected = null));
+    this.details.forEach((d) => (d.selected = null));
+    this.detailsOpt.forEach((d) => (d.selected = null));
     this.comment = null;
   }
 

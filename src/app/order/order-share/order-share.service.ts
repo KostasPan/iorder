@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderShareService {
   constructor() {}
@@ -18,7 +18,7 @@ export class OrderShareService {
 
   pushToOrder(product) {
     this.order.push(product);
-    console.log(this.table, this.tableId, this.order);
+    // console.log(this.table, this.tableId, this.order);
   }
 
   getOrder() {
@@ -33,7 +33,7 @@ export class OrderShareService {
   removeProduct(productIndex) {
     if (productIndex > -1) {
       this.order.splice(productIndex, 1);
-      console.log('Remove completed');
+      // console.log('Remove completed');
     }
   }
 }

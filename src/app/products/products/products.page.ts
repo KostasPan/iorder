@@ -1,29 +1,22 @@
 import { DetailsShareDataService } from './../details/details-share/details-share-data.service';
-import { LoadingService } from './../../services/loading.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../products.service';
-import { ToastService } from 'src/app/services/toast.service';
 import { ModalController } from '@ionic/angular';
 import { DetailsModalComponent } from '../details/details-modal/details-modal.component';
-import { OverlayEventDetail } from '@ionic/core';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.page.html',
-  styleUrls: ['./products.page.scss']
+  styleUrls: ['./products.page.scss'],
 })
 export class ProductsPage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private productsService: ProductsService,
-    private loadingService: LoadingService,
-    private toastService: ToastService,
     private modalController: ModalController,
     private router: Router,
-    private datailsService: DetailsShareDataService,
-    private location: Location
+    private datailsService: DetailsShareDataService
   ) {}
 
   private category: string;
@@ -35,9 +28,9 @@ export class ProductsPage implements OnInit {
   }
 
   initProducts(c) {
-    console.log(c);
+    // console.log(c);
     const body = { category: c };
-    this.productsService.getProductsByCategory(body).subscribe(data => {
+    this.productsService.getProductsByCategory(body).subscribe((data) => {
       this.products = data.products;
     });
   }
@@ -63,8 +56,8 @@ export class ProductsPage implements OnInit {
       cssClass: css,
       componentProps: {
         productName: name,
-        productPrice: price
-      }
+        productPrice: price,
+      },
     });
     // se periptwsi pou energopoiithei i onDidDismiss()
     // epistrefei data
@@ -88,7 +81,7 @@ export class ProductsPage implements OnInit {
 
   removeLastUrlTwoElement(url) {
     const array = url.split('/');
-    console.log(array);
+    // console.log(array);
     array.pop();
     array.pop();
     return array.join('/');

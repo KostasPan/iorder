@@ -6,10 +6,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid no-padding>
+  <ion-grid class="ion-no-padding">
     <form (ngSubmit)="setTablePos()" [formGroup]="setTableForm" novalidate>
-      <ion-row justify-content-center>
-        <ion-col align-self-center size-xs="12" size-sm="12" size-md="8" size-lg="6" size-xs="12">
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-align-self-center" size-xs="12" size-sm="12" size-md="8" size-lg="6" size-xs="12">
           <ion-item>
             <ion-label position="stacked">New position name</ion-label>
             <ion-input clearInput type="text" value={{position_table_name}} formControlName="position_table_name" name="position_table_name"></ion-input>

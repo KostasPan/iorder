@@ -15,7 +15,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-order',
   templateUrl: './order.page.html',
-  styleUrls: ['./order.page.scss']
+  styleUrls: ['./order.page.scss'],
 })
 export class OrderPage implements OnInit {
   constructor(
@@ -50,7 +50,7 @@ export class OrderPage implements OnInit {
     moment.locale('el');
     // this.checkAdminViewMode().then(isAdmin => (this.adminViewMode = isAdmin));
     this.checkIfAdmin();
-    this.tablesShareService.getTable().then(table => {
+    this.tablesShareService.getTable().then((table) => {
       if ('discount' in table) {
         this.discount.discount = table.discount.discount;
         this.discount.type = table.discount.type;
@@ -100,7 +100,7 @@ export class OrderPage implements OnInit {
           this.tableName,
           'Are you sure you want to navigate back to tables?'
         )
-        .then(c => {
+        .then((c) => {
           this.popupIsPresent = false;
           return c;
         });
@@ -116,7 +116,7 @@ export class OrderPage implements OnInit {
       products: this.unsentProducts,
       tableId: this.tableId,
       table: this.tableName,
-      time: moment().format('HH:mm:ss')
+      time: moment().format('HH:mm:ss'),
     };
     this.orderService.setOrder(body).subscribe(() => {
       // reset unsentProducts
@@ -129,7 +129,7 @@ export class OrderPage implements OnInit {
   payoffProducts() {
     const body = {
       tableId: this.tableId,
-      total: this.total
+      total: this.total,
     };
     if (this.discount.isDiscountActive) {
       body.total = +(+this.discount.discountedtotal).toFixed(2);
@@ -146,8 +146,8 @@ export class OrderPage implements OnInit {
 
   getProducts() {
     this.orderService.getOrder({ tableId: this.tableId }).subscribe(
-      data => {
-        data.order.forEach(p => (p.price = +p.price.toFixed(2)));
+      (data) => {
+        data.order.forEach((p) => (p.price = +p.price.toFixed(2)));
         this.products = data.order;
         console.log(this.products);
         this.discount.total = this.total = this.calculateTotal(this.products);
@@ -161,7 +161,7 @@ export class OrderPage implements OnInit {
         console.log(data.order);
         this.orderChecked = true;
       },
-      error => {
+      (error) => {
         if (error.error.auth === null) {
           this.alertService.presentAlert(
             'Table Access',
@@ -183,18 +183,18 @@ export class OrderPage implements OnInit {
 
   calculateTotal(productsList) {
     let total = 0;
-    productsList.forEach(el => (total += el.price));
+    productsList.forEach((el) => (total += el.price));
     return +total.toFixed(2);
   }
 
   calculateDiscountedTotal(productsList) {
     let total = 0;
-    productsList.forEach(el => (total += el.discountedPrice));
+    productsList.forEach((el) => (total += el.discountedPrice));
     return +total.toFixed(2);
   }
 
   calculateProductDisPrice(productsList) {
-    productsList.forEach(p => {
+    productsList.forEach((p) => {
       p.discountedPrice = +(
         p.price -
         (this.discount.discount / 100) * p.price
@@ -221,7 +221,7 @@ export class OrderPage implements OnInit {
   selectProduct(product) {
     if (this.unsentProducts.length <= 0) {
       product.selected = !product.selected;
-      const selectedProd = this.products.filter(p => p.selected);
+      const selectedProd = this.products.filter((p) => p.selected);
       if (
         this.discount.isDiscountActive &&
         this.discount.type === 'percentage'
@@ -242,8 +242,8 @@ export class OrderPage implements OnInit {
 
   unselectProducts() {
     this.products
-      .filter(product => product.selected === true)
-      .map(product => (product.selected = false));
+      .filter((product) => product.selected === true)
+      .map((product) => (product.selected = false));
     this.selectedTotal = 0;
     this.isSelectActive = false;
   }
@@ -251,8 +251,8 @@ export class OrderPage implements OnInit {
   payoffSelectedProducts() {
     // get all user selected products' ids
     const selectedProdIds = this.products
-      .filter(p => p.selected)
-      .map(p => p._id);
+      .filter((p) => p.selected)
+      .map((p) => p._id);
 
     if (selectedProdIds.length === this.products.length) {
       // user selects all products, payoff all
@@ -262,9 +262,9 @@ export class OrderPage implements OnInit {
       this.orderService
         .partlyPayoffOrder({
           p_ids: selectedProdIds,
-          total: this.selectedTotal
+          total: this.selectedTotal,
         })
-        .subscribe(data => {
+        .subscribe((data) => {
           this.removeSelectedProducts();
           this.selectedTotal = 0;
           this.isSelectActive = false;
@@ -275,7 +275,7 @@ export class OrderPage implements OnInit {
   }
 
   removeSelectedProducts() {
-    this.products = this.products.filter(p => !p.selected);
+    this.products = this.products.filter((p) => !p.selected);
     this.selectedTotal = 0;
     this.isSelectActive = false;
   }
@@ -285,37 +285,37 @@ export class OrderPage implements OnInit {
       '/order',
       this.tableName,
       this.tableId,
-      'categories'
+      'categories',
     ]);
   }
 
   async openTablesModal() {
     const selectedProdIds = this.products
-      .filter(p => p.selected)
-      .map(p => p._id);
+      .filter((p) => p.selected)
+      .map((p) => p._id);
     const modal: HTMLIonModalElement = await this.modalController.create({
       component: ShowTablesModalComponent,
       cssClass: 'details-modal-css-100',
       componentProps: {
         tableName: this.tableName,
-        tableId: this.tableId
-      }
+        tableId: this.tableId,
+      },
     });
     modal.onDidDismiss().then((detail: OverlayEventDetail) => {
       if (detail.data.tableid) {
         // send api move order
         const selectedOrdersIds = this.products
-          .filter(p => p.selected)
-          .map(p => p._id);
+          .filter((p) => p.selected)
+          .map((p) => p._id);
         this.orderService
           .moveOrder({
             fromtableid: this.tableId,
             totableid: detail.data.tableid,
             selectedorders: selectedOrdersIds,
             moveall:
-              this.products.length === selectedOrdersIds.length ? true : false
+              this.products.length === selectedOrdersIds.length ? true : false,
           })
-          .subscribe(data => {
+          .subscribe((data) => {
             if (
               this.discount.isDiscountActive &&
               this.products.length === selectedOrdersIds.length
@@ -352,8 +352,8 @@ export class OrderPage implements OnInit {
       component: DiscountModalComponent,
       cssClass: 'details-modal-css-50',
       componentProps: {
-        total: this.calculateTotal(this.products)
-      }
+        total: this.calculateTotal(this.products),
+      },
     });
     modal.onDidDismiss().then((detail: OverlayEventDetail) => {
       if (detail.data && detail.data.discount) {
@@ -378,7 +378,7 @@ export class OrderPage implements OnInit {
     if (this.isAdmin) {
       this.orderService
         .unsetDiscount({ tableid: this.tableId })
-        .subscribe(data => {
+        .subscribe((data) => {
           this.discount.clearfunc();
           this.unselectProducts();
         });
@@ -386,7 +386,7 @@ export class OrderPage implements OnInit {
   }
 
   checkIfAdmin() {
-    this.tokenService.getAuthStoragePayload().then(p => {
+    this.tokenService.getAuthStoragePayload().then((p) => {
       this.isAdmin = p.data.admin;
     });
   }
@@ -394,10 +394,10 @@ export class OrderPage implements OnInit {
   async checkAdminViewMode() {
     const tokenData = await this.tokenService
       .getAuthStoragePayload()
-      .then(payload => {
+      .then((payload) => {
         return { username: payload.data.username, admin: payload.data.admin };
       });
-    const tableData = await this.tablesShareService.getTable().then(table => {
+    const tableData = await this.tablesShareService.getTable().then((table) => {
       return { busy: table.busy, user: table.user };
     });
 

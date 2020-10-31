@@ -7,7 +7,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 @Component({
   selector: 'app-set-product',
   templateUrl: './set-product.component.html',
-  styleUrls: ['./set-product.component.scss']
+  styleUrls: ['./set-product.component.scss'],
 })
 export class SetProductComponent implements OnInit {
   public form: FormGroup;
@@ -18,7 +18,7 @@ export class SetProductComponent implements OnInit {
     // type: ['email', Validators.compose([Validators.required])], // i.e Email, Phone
     type: ['', Validators.compose([Validators.required])],
     choices: ['', Validators.required],
-    multiple: [false]
+    multiple: [false],
   };
 
   public product = null;
@@ -44,15 +44,15 @@ export class SetProductComponent implements OnInit {
     this.form = this.fb.group({
       category: [
         this.product ? this.product.category : '',
-        Validators.required
+        Validators.required,
       ],
       name: [this.product ? this.product.name : '', Validators.required],
       price: [
         this.product ? this.product.price : '',
-        Validators.compose([Validators.min(0), Validators.required])
+        Validators.compose([Validators.min(0), Validators.required]),
       ],
       details: this.fb.array([]),
-      detailsoptional: this.fb.array([])
+      detailsoptional: this.fb.array([]),
     });
 
     this.initFormArrays();
@@ -64,21 +64,21 @@ export class SetProductComponent implements OnInit {
   }
 
   initFormArrayValues() {
-    this.product.details.forEach(el => {
+    this.product.details.forEach((el) => {
       this.detailList.push(
         this.fb.group({
           type: [el.type, Validators.compose([Validators.required])],
           choices: [el.choices, Validators.required],
-          multiple: [el.multiple]
+          multiple: [el.multiple],
         })
       );
     });
-    this.product.detailsoptional.forEach(el => {
+    this.product.detailsoptional.forEach((el) => {
       this.detailOptionalList.push(
         this.fb.group({
           type: [el.type, Validators.compose([Validators.required])],
           choices: [el.choices, Validators.required],
-          multiple: [el.multiple]
+          multiple: [el.multiple],
         })
       );
     });
@@ -135,12 +135,12 @@ export class SetProductComponent implements OnInit {
   }
 
   modifyChoicesIfString() {
-    this.form.value.details.forEach(d => {
+    this.form.value.details.forEach((d) => {
       if (!Array.isArray(d.choices)) {
         d.choices = d.choices.split(',');
       }
     });
-    this.form.value.detailsoptional.forEach(d => {
+    this.form.value.detailsoptional.forEach((d) => {
       if (!Array.isArray(d.choices)) {
         d.choices = d.choices.split(',');
       }
@@ -159,7 +159,7 @@ export class SetProductComponent implements OnInit {
 
   submitEditProduct() {
     this.form.value._id = this.product._id;
-    this.productsService.editProduct(this.form.value).subscribe(data => {
+    this.productsService.editProduct(this.form.value).subscribe((data) => {
       this.toastService.presentToast(data.message);
       this.updateui = true;
       this.myDismiss();
@@ -167,7 +167,7 @@ export class SetProductComponent implements OnInit {
   }
 
   submitNewProduct() {
-    this.productsService.addProduct(this.form.value).subscribe(data => {
+    this.productsService.addProduct(this.form.value).subscribe((data) => {
       this.toastService.presentToast(data.message);
       this.form.reset();
       this.init();

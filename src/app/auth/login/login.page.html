@@ -1,12 +1,12 @@
-<ion-content padding>
+<ion-content class="ion-padding">
 
   <ion-grid>
-    <ion-row justify-content-center>
-      <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+    <ion-row class="ion-justify-content-center">
+      <ion-col class="ion-align-self-center" size-md="6" size-lg="5" size-xs="12">
         <div class="settings-btn">
           <ion-button (click)="openIPModal()"
             fill="clear" color="secondary">
-            <ion-icon no-padding slot="icon-only" name="settings"></ion-icon>
+            <ion-icon class="ion-no-padding" slot="icon-only" name="settings"></ion-icon>
           </ion-button>
         </div>
         <div class="logo">
@@ -15,7 +15,7 @@
         <!-- <div text-center>
           <h4>iOrder</h4>
         </div> -->
-        <div padding>
+        <div class="ion-padding">
           <form (ngSubmit)="loginUser()" [formGroup]="loginForm" novalidate>
             <ion-item>
               <ion-icon name="person"></ion-icon>
